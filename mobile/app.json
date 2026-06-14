@@ -1,0 +1,25 @@
+{
+  "expo": {
+    "name": "ZimHomes",
+    "slug": "zimhomes",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "scheme": "zimhomes",
+    "userInterfaceStyle": "light",
+    "assetBundlePatterns": ["**/*"],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "backgroundColor": "#11613b"
+      }
+    },
+    "web": {
+      "bundler": "metro"
+    },
+    "extra": {
+      "apiBaseUrl": "http://127.0.0.1:8000"
+    }
+  }
+}

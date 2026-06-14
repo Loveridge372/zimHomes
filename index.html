@@ -1,0 +1,264 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ZimHomes | Find, Rent, Buy, Manage</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="#home" aria-label="ZimHomes home">
+        <span class="brand-mark">ZH</span>
+        <span>ZimHomes</span>
+      </a>
+      <nav class="nav-links" aria-label="Primary">
+        <a href="#search">Search</a>
+        <a href="#sell">List property</a>
+        <a href="#manage">Management</a>
+        <a href="#admin">Admin</a>
+      </nav>
+      <button class="icon-button" id="openPaymentBtn" type="button" aria-label="Open payments">
+        <span aria-hidden="true">$</span>
+      </button>
+    </header>
+
+    <main>
+      <section class="hero" id="home">
+        <div class="hero-content">
+          <p class="eyebrow">Zimbabwe property marketplace</p>
+          <h1>ZimHomes</h1>
+          <p class="hero-copy">
+            Find accommodation, buy property, list rentals, and let ZimHomes manage your investment with verified listings and local payments.
+          </p>
+          <form class="hero-search" id="quickSearchForm">
+            <label>
+              <span>City or suburb</span>
+              <input id="quickSearch" type="search" placeholder="Borrowdale, Avondale, Bulawayo..." autocomplete="off" />
+            </label>
+            <button class="primary-button" type="submit">Search</button>
+          </form>
+        </div>
+      </section>
+
+      <section class="stats-band" aria-label="ZimHomes summary">
+        <div>
+          <strong id="liveCount">0</strong>
+          <span>live listings</span>
+        </div>
+        <div>
+          <strong>10%</strong>
+          <span>managed-property fee target</span>
+        </div>
+        <div>
+          <strong>Paynow</strong>
+          <span>EcoCash, OneMoney, cards and more</span>
+        </div>
+      </section>
+
+      <section class="section-shell" id="search">
+        <div class="section-heading">
+          <p class="eyebrow">Search homes</p>
+          <h2>Rent or buy across Zimbabwe</h2>
+        </div>
+
+        <div class="search-panel">
+          <label>
+            <span>Location</span>
+            <input id="locationFilter" type="search" placeholder="City, suburb, area" />
+          </label>
+          <label>
+            <span>Purpose</span>
+            <select id="purposeFilter">
+              <option value="all">Rent and buy</option>
+              <option value="rent">Rent</option>
+              <option value="buy">Buy</option>
+            </select>
+          </label>
+          <label>
+            <span>Property type</span>
+            <select id="typeFilter">
+              <option value="all">All types</option>
+              <option value="room">Room</option>
+              <option value="cottage">Cottage</option>
+              <option value="flat">Flat</option>
+              <option value="house">House</option>
+              <option value="stand">Stand</option>
+              <option value="commercial">Commercial</option>
+            </select>
+          </label>
+          <label>
+            <span>Max price USD</span>
+            <input id="priceFilter" type="number" min="0" step="50" placeholder="800" />
+          </label>
+        </div>
+
+        <div class="listing-grid" id="listingGrid" aria-live="polite"></div>
+      </section>
+
+      <section class="section-shell split" id="sell">
+        <div>
+          <p class="eyebrow">For owners</p>
+          <h2>Upload a rental or property for sale</h2>
+          <p>
+            Owners can list properties for admin review, choose self-managed or ZimHomes managed, and pay listing or featured placement fees.
+          </p>
+          <div class="fee-list">
+            <span>Basic listing: $5</span>
+            <span>Featured 30 days: $20</span>
+            <span>Viewing fee: $1-$3</span>
+          </div>
+        </div>
+        <form class="form-card" id="propertyForm">
+          <label>
+            <span>Property title</span>
+            <input name="title" required placeholder="2-bedroom flat in Avondale" />
+          </label>
+          <div class="form-row">
+            <label>
+              <span>City</span>
+              <input name="city" required placeholder="Harare" />
+            </label>
+            <label>
+              <span>Suburb</span>
+              <input name="suburb" required placeholder="Avondale" />
+            </label>
+          </div>
+          <div class="form-row">
+            <label>
+              <span>Purpose</span>
+              <select name="purpose">
+                <option value="rent">Rent</option>
+                <option value="buy">Buy</option>
+              </select>
+            </label>
+            <label>
+              <span>Type</span>
+              <select name="type">
+                <option value="flat">Flat</option>
+                <option value="house">House</option>
+                <option value="cottage">Cottage</option>
+                <option value="room">Room</option>
+                <option value="stand">Stand</option>
+                <option value="commercial">Commercial</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-row">
+            <label>
+              <span>Price USD</span>
+              <input name="price" type="number" min="1" required placeholder="650" />
+            </label>
+            <label>
+              <span>Bedrooms</span>
+              <input name="beds" type="number" min="0" required placeholder="2" />
+            </label>
+          </div>
+          <label>
+            <span>Management option</span>
+            <select name="management">
+              <option value="Self managed">Self managed</option>
+              <option value="ZimHomes managed">ZimHomes managed</option>
+            </select>
+          </label>
+          <label>
+            <span>Description</span>
+            <textarea name="description" rows="4" required placeholder="Security, water, parking, lease terms..."></textarea>
+          </label>
+          <button class="primary-button" type="submit">Submit for approval</button>
+          <p class="form-note" id="formNote" role="status"></p>
+        </form>
+      </section>
+
+      <section class="management-band" id="manage">
+        <div class="section-heading">
+          <p class="eyebrow">ZimHomes managed</p>
+          <h2>We can act as your property agent</h2>
+        </div>
+        <div class="service-grid">
+          <article>
+            <h3>Tenant sourcing</h3>
+            <p>Advertise, screen inquiries, schedule viewings, and prepare tenant applications.</p>
+          </article>
+          <article>
+            <h3>Rent collection</h3>
+            <p>Collect rent through supported payment channels and track paid, pending, or overdue accounts.</p>
+          </article>
+          <article>
+            <h3>Maintenance coordination</h3>
+            <p>Log repair requests, assign contractors, and keep owners updated with inspection notes.</p>
+          </article>
+          <article>
+            <h3>Owner reporting</h3>
+            <p>Monthly statements show income, fees, maintenance costs, and occupancy status.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="section-shell" id="admin">
+        <div class="section-heading">
+          <p class="eyebrow">Admin dashboard preview</p>
+          <h2>Approve listings and monitor payments</h2>
+        </div>
+        <div class="dashboard-grid">
+          <div class="admin-panel">
+            <h3>Pending approvals</h3>
+            <div id="pendingList" class="pending-list"></div>
+          </div>
+          <div class="admin-panel">
+            <h3>Payment queue</h3>
+            <div class="payment-row">
+              <span>Listing fee</span>
+              <strong>$5 pending</strong>
+            </div>
+            <div class="payment-row">
+              <span>Featured listing</span>
+              <strong>$20 paid</strong>
+            </div>
+            <div class="payment-row">
+              <span>Viewing request</span>
+              <strong>$2 pending</strong>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <dialog class="payment-modal" id="paymentModal">
+      <form method="dialog">
+        <div class="modal-head">
+          <h2>Start payment</h2>
+          <button class="icon-button" value="cancel" aria-label="Close payment modal">X</button>
+        </div>
+        <label>
+          <span>Payment type</span>
+          <select id="paymentType">
+            <option>Listing fee - $5</option>
+            <option>Featured listing - $20</option>
+            <option>Viewing fee - $2</option>
+            <option>Rent collection</option>
+            <option>Deposit payment</option>
+          </select>
+        </label>
+        <label>
+          <span>Channel</span>
+          <select id="paymentChannel">
+            <option>Paynow EcoCash</option>
+            <option>Paynow OneMoney</option>
+            <option>Visa / Mastercard</option>
+            <option>ZimSwitch</option>
+            <option>InnBucks</option>
+          </select>
+        </label>
+        <label>
+          <span>Phone or payment reference</span>
+          <input id="paymentReference" placeholder="+263 77 000 0000" />
+        </label>
+        <button class="primary-button" id="simulatePaymentBtn" value="default" type="button">Simulate payment</button>
+        <p class="form-note" id="paymentNote"></p>
+      </form>
+    </dialog>
+
+    <script src="app.js"></script>
+  </body>
+</html>
