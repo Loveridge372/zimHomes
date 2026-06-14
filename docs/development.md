@@ -56,3 +56,15 @@ The current payment endpoint creates a local pending payment record and a fake P
 2. Create real Paynow payment requests in `/payments/initiate`.
 3. Verify Paynow callbacks in `/payments/paynow/webhook/{payment_id}`.
 4. Unlock listings, featured placement, viewing bookings, rent records, or deposits only after verified payment status is `paid`.
+
+## Agreement Generation
+
+Draft agreement templates live in `docs/agreements`, and generated Word versions live in `generated/agreements`.
+
+Regenerate the Word files after editing the Markdown templates:
+
+```bash
+python tools/generate_agreement_docs.py
+```
+
+Production flow should generate a lease or management agreement from saved property, owner, tenant, payment, and inspection data, then store the signed document against the relevant property record.
