@@ -82,6 +82,9 @@ class PaymentModel(Base):
     provider_reference: Mapped[str] = mapped_column(String(80), unique=True, index=True)
     status: Mapped[str] = mapped_column(String(40), default="pending", index=True)
     redirect_url: Mapped[str] = mapped_column(String(255))
+    paynow_poll_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    paynow_browser_url: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    provider_status_message: Mapped[str | None] = mapped_column(String(255), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 

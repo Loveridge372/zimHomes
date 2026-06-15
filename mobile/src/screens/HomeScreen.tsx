@@ -8,6 +8,7 @@ import { PropertyCard } from "../components/PropertyCard";
 import { PropertyDetails } from "../components/PropertyDetails";
 import { Screen } from "../components/Screen";
 import { demoProperties } from "../data/demoProperties";
+import { useFavorites } from "../state/FavoritesContext";
 import { colors, spacing } from "../theme";
 import { Property } from "../types";
 
@@ -17,8 +18,15 @@ export function HomeScreen() {
   const [maxPrice, setMaxPrice] = useState("");
   const [properties, setProperties] = useState<Property[]>(demoProperties);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
+  const [bookingProperty, setBookingProperty] = useState<Property | null>(null);
+  const [viewingDate, setViewingDate] = useState("");
+  const [viewingTime, setViewingTime] = useState("");
+  const [viewerPhone, setViewerPhone] = useState("");
+  const [viewingMessage, setViewingMessage] = useState("");
   const [loading, setLoading] = useState(false);
+  const [bookingLoading, setBookingLoading] = useState(false);
   const [searched, setSearched] = useState(false);
+  const { isFavorite, toggleFavorite } = useFavorites();
 
   async function loadProperties() {
     setLoading(true);
@@ -37,23 +45,49 @@ export function HomeScreen() {
     }
   }
 
-  async function bookViewing(property: Property) {
+  function openBookingForm(property: Property) {
+    setBookingProperty(property);
+    setViewingMessage(`I would like to view ${property.title}.`);
+  }
+
+  function closeBookingForm() {
+    setBookingProperty(null);
+    setViewingDate("");
+    setViewingTime("");
+    setViewerPhone("");
+    setViewingMessage("");
+  }
+
+  async function submitViewingBooking() {
+    if (!bookingProperty) {
+      return;
+    }
+    if (!viewingDate.trim() || !viewingTime.trim() || !viewerPhone.trim()) {
+      Alert.alert("Booking details needed", "Add a viewing date, time, and phone number.");
+      return;
+    }
+
+    setBookingLoading(true);
     try {
       const viewing = await createViewingRequest({
-        property_id: property.id,
-        message: `Viewing requested for ${property.title}`
+        property_id: bookingProperty.id,
+        preferred_time: `${viewingDate.trim()} at ${viewingTime.trim()}`,
+        message: `Phone: ${viewerPhone.trim()}\n${viewingMessage.trim() || `Viewing requested for ${bookingProperty.title}`}`
       });
       const payment = await initiatePayment({
         payment_type: "viewing_fee",
         amount_usd: 2,
         channel: "paynow_ecocash",
-        payer_reference: "+263770000000",
-        property_id: property.id
+        payer_reference: viewerPhone.trim(),
+        property_id: bookingProperty.id
       });
       Alert.alert("Viewing requested", `Viewing: ${viewing.id.slice(0, 8)}\nPayment: ${payment.provider_reference}`);
+      closeBookingForm();
     } catch (error) {
       const message = error instanceof Error ? error.message : "Please try again.";
       Alert.alert("Viewing request failed", `${message}\n\nBackend URL: ${getCurrentApiBaseUrl()}`);
+    } finally {
+      setBookingLoading(false);
     }
   }
 
@@ -64,7 +98,29 @@ export function HomeScreen() {
   if (selectedProperty) {
     return (
       <Screen>
-        <PropertyDetails property={selectedProperty} onBack={() => setSelectedProperty(null)} onBookViewing={bookViewing} />
+        <PropertyDetails
+          property={selectedProperty}
+          isFavorite={isFavorite(selectedProperty.id)}
+          onBack={() => setSelectedProperty(null)}
+          onBookViewing={openBookingForm}
+          onToggleFavorite={toggleFavorite}
+        />
+        {bookingProperty ? (
+          <ViewingForm
+            property={bookingProperty}
+            viewingDate={viewingDate}
+            viewingTime={viewingTime}
+            viewerPhone={viewerPhone}
+            viewingMessage={viewingMessage}
+            bookingLoading={bookingLoading}
+            setViewingDate={setViewingDate}
+            setViewingTime={setViewingTime}
+            setViewerPhone={setViewerPhone}
+            setViewingMessage={setViewingMessage}
+            onSubmit={submitViewingBooking}
+            onCancel={closeBookingForm}
+          />
+        ) : null}
       </Screen>
     );
   }
@@ -90,12 +146,31 @@ export function HomeScreen() {
         <PrimaryButton label={loading ? "Searching..." : "Search"} onPress={loadProperties} disabled={loading} />
       </View>
 
+      {bookingProperty ? (
+        <ViewingForm
+          property={bookingProperty}
+          viewingDate={viewingDate}
+          viewingTime={viewingTime}
+          viewerPhone={viewerPhone}
+          viewingMessage={viewingMessage}
+          bookingLoading={bookingLoading}
+          setViewingDate={setViewingDate}
+          setViewingTime={setViewingTime}
+          setViewerPhone={setViewerPhone}
+          setViewingMessage={setViewingMessage}
+          onSubmit={submitViewingBooking}
+          onCancel={closeBookingForm}
+        />
+      ) : null}
+
       {properties.length ? (
         properties.map((property) => (
           <PropertyCard
             key={property.id}
             property={property}
-            onBookViewing={bookViewing}
+            isFavorite={isFavorite(property.id)}
+            onBookViewing={openBookingForm}
+            onToggleFavorite={toggleFavorite}
             onViewDetails={(selected) => setSelectedProperty(selected)}
           />
         ))
@@ -108,6 +183,51 @@ export function HomeScreen() {
         </View>
       )}
     </Screen>
+  );
+}
+
+type ViewingFormProps = {
+  property: Property;
+  viewingDate: string;
+  viewingTime: string;
+  viewerPhone: string;
+  viewingMessage: string;
+  bookingLoading: boolean;
+  setViewingDate: (value: string) => void;
+  setViewingTime: (value: string) => void;
+  setViewerPhone: (value: string) => void;
+  setViewingMessage: (value: string) => void;
+  onSubmit: () => void;
+  onCancel: () => void;
+};
+
+function ViewingForm({
+  property,
+  viewingDate,
+  viewingTime,
+  viewerPhone,
+  viewingMessage,
+  bookingLoading,
+  setViewingDate,
+  setViewingTime,
+  setViewerPhone,
+  setViewingMessage,
+  onSubmit,
+  onCancel
+}: ViewingFormProps) {
+  return (
+    <View style={styles.bookingPanel}>
+      <Text style={styles.bookingTitle}>Book viewing</Text>
+      <Text style={styles.bookingCopy}>{property.title}</Text>
+      <Field label="Preferred date" value={viewingDate} onChangeText={setViewingDate} placeholder="2026-06-20" />
+      <Field label="Preferred time" value={viewingTime} onChangeText={setViewingTime} placeholder="14:30" />
+      <Field label="Phone number" value={viewerPhone} onChangeText={setViewerPhone} placeholder="+263..." keyboardType="phone-pad" />
+      <Field label="Message" value={viewingMessage} onChangeText={setViewingMessage} placeholder="Any notes for the owner..." multiline />
+      <View style={styles.bookingActions}>
+        <PrimaryButton label={bookingLoading ? "Submitting..." : "Submit viewing request"} onPress={onSubmit} disabled={bookingLoading} />
+        <PrimaryButton label="Cancel" onPress={onCancel} variant="secondary" />
+      </View>
+    </View>
   );
 }
 
@@ -140,6 +260,26 @@ const styles = StyleSheet.create({
     borderColor: colors.line,
     backgroundColor: colors.surface,
     padding: spacing.md
+  },
+  bookingPanel: {
+    gap: spacing.sm,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.green,
+    backgroundColor: colors.surface,
+    padding: spacing.md
+  },
+  bookingTitle: {
+    color: colors.ink,
+    fontSize: 20,
+    fontWeight: "900"
+  },
+  bookingCopy: {
+    color: colors.muted,
+    lineHeight: 21
+  },
+  bookingActions: {
+    gap: spacing.sm
   },
   emptyState: {
     gap: spacing.xs,

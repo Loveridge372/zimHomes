@@ -4,12 +4,14 @@ import { Alert, StyleSheet, Text, View } from "react-native";
 import { getMyViewingRequests } from "../api/client";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { Screen } from "../components/Screen";
+import { useFavorites } from "../state/FavoritesContext";
 import { colors, spacing } from "../theme";
 import { ViewingRequest } from "../types";
 
 export function ActivityScreen() {
   const [viewings, setViewings] = useState<ViewingRequest[]>([]);
   const [loading, setLoading] = useState(false);
+  const { favoriteProperties, removeFavorite } = useFavorites();
 
   async function loadViewings() {
     setLoading(true);
@@ -33,6 +35,34 @@ export function ActivityScreen() {
         <Text style={styles.copy}>Track your viewing requests and booking status.</Text>
         <PrimaryButton label={loading ? "Refreshing..." : "Refresh"} onPress={loadViewings} disabled={loading} />
       </View>
+
+      <View style={styles.header}>
+        <View style={styles.row}>
+          <Text style={styles.title}>Saved properties</Text>
+          <Text style={styles.countBadge}>{favoriteProperties.length}</Text>
+        </View>
+        <Text style={styles.copy}>Homes you saved while searching.</Text>
+      </View>
+
+      {favoriteProperties.length ? (
+        favoriteProperties.map((property) => (
+          <View key={property.id} style={styles.card}>
+            <View style={styles.row}>
+              <Text style={styles.cardTitle}>{property.title}</Text>
+              <Text style={styles.price}>${property.price_usd.toLocaleString()}{property.purpose === "rent" ? "/mo" : ""}</Text>
+            </View>
+            <Text style={styles.copy}>
+              {property.suburb}, {property.city} - {property.bedrooms} bed - {property.bathrooms} bath
+            </Text>
+            <PrimaryButton label="Remove from saved" onPress={() => removeFavorite(property.id)} variant="secondary" />
+          </View>
+        ))
+      ) : (
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>No saved properties yet</Text>
+          <Text style={styles.copy}>Tap the heart on a property to keep it here.</Text>
+        </View>
+      )}
 
       {viewings.length ? (
         viewings.map((viewing) => (
@@ -88,6 +118,21 @@ const styles = StyleSheet.create({
     flex: 1,
     color: colors.ink,
     fontSize: 18,
+    fontWeight: "900"
+  },
+  countBadge: {
+    overflow: "hidden",
+    borderRadius: 8,
+    backgroundColor: "#eaf4ed",
+    color: colors.green,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    fontSize: 12,
+    fontWeight: "900"
+  },
+  price: {
+    color: colors.green,
+    fontSize: 16,
     fontWeight: "900"
   },
   copy: {

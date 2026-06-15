@@ -21,6 +21,23 @@ Recommended first gateway: Paynow, because it supports Zimbabwe-friendly payment
 6. Backend verifies the payment result and updates status to `paid`, `failed`, or `cancelled`.
 7. App unlocks the paid action, such as publishing a listing or confirming a viewing.
 
+## Current Implementation
+
+The backend now creates Wana Imba payment records and is Paynow-ready.
+
+Environment variables:
+
+```text
+PAYNOW_INTEGRATION_ID=replace-me
+PAYNOW_INTEGRATION_KEY=replace-me
+PAYNOW_INITIATE_URL=https://www.paynow.co.zw/interface/initiatetransaction
+PUBLIC_BASE_URL=https://your-public-api-domain.example
+```
+
+If `PAYNOW_INTEGRATION_ID` and `PAYNOW_INTEGRATION_KEY` are missing, the backend stays in demo mode and returns a pending payment reference without charging the customer.
+
+For local phone testing, payment creation works in demo mode. For live Paynow testing, `PUBLIC_BASE_URL` must be reachable by Paynow over the internet, not just `127.0.0.1` or a private Wi-Fi IP.
+
 ## Admin Controls
 
 - See pending and paid payments.

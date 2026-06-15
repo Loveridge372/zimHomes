@@ -3,6 +3,7 @@ import { ImageBackground, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 import { spacing } from "../theme";
+import { AppFooter } from "./AppFooter";
 
 const backgroundImage = require("../../assets/wana-imba-background.jpeg");
 
@@ -12,7 +13,10 @@ export function Screen({ children }: PropsWithChildren) {
       <ImageBackground source={backgroundImage} resizeMode="cover" style={styles.background}>
         <View style={styles.scrim}>
           <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-            <View style={styles.inner}>{children}</View>
+            <View style={styles.inner}>
+              {children}
+              <AppFooter />
+            </View>
           </ScrollView>
         </View>
       </ImageBackground>

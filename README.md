@@ -48,6 +48,8 @@ Password: AdminPass123
 
 Property photos uploaded during local development are stored under `backend/uploads/` and served from `/uploads/...`.
 
+Payments are Paynow-ready. Without `PAYNOW_INTEGRATION_ID` and `PAYNOW_INTEGRATION_KEY`, the backend uses demo mode and creates pending references without charging customers.
+
 ## Mobile App
 
 ```bash

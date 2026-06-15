@@ -79,6 +79,9 @@ class Payment(BaseModel):
     redirect_url: str
     property_id: str | None = None
     user_id: str | None = None
+    paynow_poll_url: str | None = None
+    paynow_browser_url: str | None = None
+    provider_status_message: str | None = None
 
 
 class ViewingRequestIn(BaseModel):

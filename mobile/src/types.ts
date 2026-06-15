@@ -31,6 +31,9 @@ export type Payment = {
   provider_reference: string;
   status: "pending" | "paid" | "failed" | "cancelled";
   redirect_url: string;
+  paynow_poll_url?: string | null;
+  paynow_browser_url?: string | null;
+  provider_status_message?: string | null;
 };
 
 export type ViewingRequest = {

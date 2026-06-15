@@ -156,6 +156,10 @@ export function approveProperty(propertyId: string) {
   });
 }
 
+export function getUsers() {
+  return request<User[]>("/admin/users");
+}
+
 export function initiatePayment(payload: {
   payment_type: string;
   amount_usd: number;
@@ -166,6 +170,16 @@ export function initiatePayment(payload: {
   return request<Payment>("/payments/initiate", {
     method: "POST",
     body: JSON.stringify(payload)
+  });
+}
+
+export function getPayments() {
+  return request<Payment[]>("/payments");
+}
+
+export function refreshPayment(paymentId: string) {
+  return request<Payment>(`/payments/${paymentId}/refresh`, {
+    method: "POST"
   });
 }
 

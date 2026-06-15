@@ -3,7 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.repository import store
-from app.schemas import Property
+from app.schemas import Property, User
 
 router = APIRouter(prefix="/admin", tags=["admin"])
 
@@ -19,3 +19,8 @@ def approve_property(property_id: str, db: Session = Depends(get_db)) -> Propert
     if not item:
         raise HTTPException(status_code=404, detail="Property not found")
     return item
+
+
+@router.get("/users", response_model=list[User])
+def registered_users(db: Session = Depends(get_db)) -> list[User]:
+    return store.list_users(db)

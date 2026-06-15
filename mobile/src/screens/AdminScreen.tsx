@@ -1,26 +1,38 @@
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 
-import { approveProperty, getPendingProperties, getViewingRequests, updateViewingStatus } from "../api/client";
+import { approveProperty, getPayments, getPendingProperties, getUsers, getViewingRequests, refreshPayment, updateViewingStatus } from "../api/client";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { Screen } from "../components/Screen";
 import { colors, spacing } from "../theme";
-import { Property, ViewingRequest } from "../types";
+import { Payment, Property, User, ViewingRequest } from "../types";
 
 export function AdminScreen() {
   const [pending, setPending] = useState<Property[]>([]);
   const [viewings, setViewings] = useState<ViewingRequest[]>([]);
+  const [payments, setPayments] = useState<Payment[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [showUsers, setShowUsers] = useState(false);
   const [loading, setLoading] = useState(false);
 
   async function loadAdminData() {
     setLoading(true);
     try {
-      const [pendingProperties, viewingRequests] = await Promise.all([getPendingProperties(), getViewingRequests()]);
+      const [pendingProperties, viewingRequests, paymentRecords, registeredUsers] = await Promise.all([
+        getPendingProperties(),
+        getViewingRequests(),
+        getPayments(),
+        getUsers()
+      ]);
       setPending(pendingProperties);
       setViewings(viewingRequests);
+      setPayments(paymentRecords);
+      setUsers(registeredUsers);
     } catch {
       setPending([]);
       setViewings([]);
+      setPayments([]);
+      setUsers([]);
     } finally {
       setLoading(false);
     }
@@ -42,6 +54,15 @@ export function AdminScreen() {
       loadAdminData();
     } catch (error) {
       Alert.alert("Could not update viewing", error instanceof Error ? error.message : "Please try again.");
+    }
+  }
+
+  async function refreshPaymentStatus(payment: Payment) {
+    try {
+      await refreshPayment(payment.id);
+      loadAdminData();
+    } catch (error) {
+      Alert.alert("Could not refresh payment", error instanceof Error ? error.message : "Please try again.");
     }
   }
 
@@ -74,6 +95,38 @@ export function AdminScreen() {
         </View>
       )}
 
+      <View style={styles.card}>
+        <View style={styles.row}>
+          <View style={styles.cardText}>
+            <Text style={styles.cardTitle}>Registered users</Text>
+            <Text style={styles.copy}>{users.length} user{users.length === 1 ? "" : "s"} registered</Text>
+          </View>
+          <Text style={styles.status}>{users.length}</Text>
+        </View>
+        <PrimaryButton label={showUsers ? "Hide users" : "View registered users"} onPress={() => setShowUsers((current) => !current)} />
+      </View>
+
+      {showUsers ? (
+        users.length ? (
+          users.map((user) => (
+            <View key={user.id} style={styles.card}>
+              <View style={styles.row}>
+                <Text style={styles.cardTitle}>{user.full_name}</Text>
+                <Text style={styles.status}>{user.role}</Text>
+              </View>
+              <Text style={styles.copy}>{user.email}</Text>
+              {user.phone ? <Text style={styles.copy}>{user.phone}</Text> : null}
+              <Text style={styles.reference}>User ID: {user.id.slice(0, 8)}</Text>
+            </View>
+          ))
+        ) : (
+          <View style={styles.card}>
+            <Text style={styles.cardTitle}>No registered users</Text>
+            <Text style={styles.copy}>Users will appear here after registration or login data is available.</Text>
+          </View>
+        )
+      ) : null}
+
       <Text style={styles.sectionTitle}>Viewing requests</Text>
       {viewings.length ? (
         viewings.map((viewing) => (
@@ -96,6 +149,27 @@ export function AdminScreen() {
         <View style={styles.card}>
           <Text style={styles.cardTitle}>No viewing requests</Text>
           <Text style={styles.copy}>Bookings from tenants and buyers will appear here.</Text>
+        </View>
+      )}
+
+      <Text style={styles.sectionTitle}>Payments</Text>
+      {payments.length ? (
+        payments.map((payment) => (
+          <View key={payment.id} style={styles.card}>
+            <View style={styles.row}>
+              <Text style={styles.cardTitle}>{payment.payment_type}</Text>
+              <Text style={styles.status}>{payment.status}</Text>
+            </View>
+            <Text style={styles.copy}>Amount: ${payment.amount_usd}</Text>
+            <Text style={styles.copy}>Reference: {payment.provider_reference}</Text>
+            {payment.provider_status_message ? <Text style={styles.copy}>{payment.provider_status_message}</Text> : null}
+            <PrimaryButton label="Refresh status" onPress={() => refreshPaymentStatus(payment)} variant="secondary" />
+          </View>
+        ))
+      ) : (
+        <View style={styles.card}>
+          <Text style={styles.cardTitle}>No payments yet</Text>
+          <Text style={styles.copy}>Listing fees, viewing fees, deposits, rent, and management payments will appear here.</Text>
         </View>
       )}
     </Screen>
@@ -133,6 +207,10 @@ const styles = StyleSheet.create({
     color: colors.ink,
     fontSize: 18,
     fontWeight: "900"
+  },
+  cardText: {
+    flex: 1,
+    gap: spacing.xs
   },
   copy: {
     color: colors.muted,

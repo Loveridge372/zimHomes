@@ -1,4 +1,5 @@
-import { Alert, Image, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { getMediaUrl } from "../api/client";
 import { colors, spacing } from "../theme";
@@ -7,8 +8,10 @@ import { PrimaryButton } from "./PrimaryButton";
 
 type Props = {
   property: Property;
+  isFavorite?: boolean;
   onBack: () => void;
   onBookViewing: (property: Property) => void;
+  onToggleFavorite?: (property: Property) => void;
 };
 
 function money(value: number, purpose: string) {
@@ -19,7 +22,7 @@ function managementLabel(value: string) {
   return value === "zimhomes_managed" ? "Wana Imba managed" : "Self managed";
 }
 
-export function PropertyDetails({ property, onBack, onBookViewing }: Props) {
+export function PropertyDetails({ property, isFavorite, onBack, onBookViewing, onToggleFavorite }: Props) {
   const { width } = useWindowDimensions();
   const imageWidth = Math.max(300, width - 32);
   const imageUrls = property.image_urls?.map(getMediaUrl).filter(Boolean) ?? [];
@@ -54,7 +57,19 @@ export function PropertyDetails({ property, onBack, onBookViewing }: Props) {
             {property.is_verified ? <Text style={styles.chip}>Verified</Text> : null}
           </View>
 
-          <Text style={styles.title}>{property.title}</Text>
+          <View style={styles.headerRow}>
+            <Text style={styles.title}>{property.title}</Text>
+            {onToggleFavorite ? (
+              <Pressable
+                accessibilityLabel={isFavorite ? "Remove from saved properties" : "Save property"}
+                accessibilityRole="button"
+                onPress={() => onToggleFavorite(property)}
+                style={({ pressed }) => [styles.favoriteButton, isFavorite ? styles.favoriteActive : null, pressed ? styles.pressed : null]}
+              >
+                <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={22} color={isFavorite ? colors.surface : colors.green} />
+              </Pressable>
+            ) : null}
+          </View>
           <Text style={styles.location}>
             {property.suburb}, {property.city}
           </Text>
@@ -147,6 +162,29 @@ const styles = StyleSheet.create({
   body: {
     gap: spacing.md,
     padding: spacing.md
+  },
+  headerRow: {
+    alignItems: "flex-start",
+    flexDirection: "row",
+    gap: spacing.sm,
+    justifyContent: "space-between"
+  },
+  favoriteButton: {
+    width: 42,
+    height: 42,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface
+  },
+  favoriteActive: {
+    borderColor: colors.green,
+    backgroundColor: colors.green
+  },
+  pressed: {
+    opacity: 0.8
   },
   chips: {
     flexDirection: "row",

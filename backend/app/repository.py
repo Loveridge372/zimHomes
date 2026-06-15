@@ -11,6 +11,7 @@ from app.schemas import (
     PropertyIn,
     PropertyStatus,
     Purpose,
+    User,
     ViewingRequest,
     ViewingRequestIn,
     ViewingStatusUpdate,
@@ -50,7 +51,14 @@ def payment_from_model(item: PaymentModel) -> Payment:
         redirect_url=item.redirect_url,
         property_id=item.property_id,
         user_id=item.user_id,
+        paynow_poll_url=item.paynow_poll_url,
+        paynow_browser_url=item.paynow_browser_url,
+        provider_status_message=item.provider_status_message,
     )
+
+
+def user_from_model(item: UserModel) -> User:
+    return User(id=item.id, full_name=item.full_name, email=item.email, phone=item.phone, role=item.role)  # type: ignore[arg-type]
 
 
 def viewing_from_model(item: ViewingRequestModel) -> ViewingRequest:
@@ -153,6 +161,30 @@ class DatabaseStore:
         db.refresh(item)
         return payment_from_model(item)
 
+    def get_payment_model(self, db: Session, payment_id: str) -> PaymentModel | None:
+        return db.get(PaymentModel, payment_id)
+
+    def save_payment_provider_details(
+        self,
+        db: Session,
+        payment_id: str,
+        status: str,
+        browser_url: str | None = None,
+        poll_url: str | None = None,
+        message: str | None = None,
+    ) -> Payment | None:
+        item = db.get(PaymentModel, payment_id)
+        if not item:
+            return None
+        item.status = status
+        item.paynow_browser_url = browser_url
+        item.paynow_poll_url = poll_url
+        item.redirect_url = browser_url or item.redirect_url
+        item.provider_status_message = message
+        db.commit()
+        db.refresh(item)
+        return payment_from_model(item)
+
     def update_payment_status(self, db: Session, payment_id: str, status: PaymentStatus) -> Payment | None:
         item = db.get(PaymentModel, payment_id)
         if not item:
@@ -165,6 +197,14 @@ class DatabaseStore:
     def get_payment(self, db: Session, payment_id: str) -> Payment | None:
         item = db.get(PaymentModel, payment_id)
         return payment_from_model(item) if item else None
+
+    def list_payments(self, db: Session) -> list[Payment]:
+        statement = select(PaymentModel).order_by(PaymentModel.created_at.desc())
+        return [payment_from_model(item) for item in db.scalars(statement).all()]
+
+    def list_users(self, db: Session) -> list[User]:
+        statement = select(UserModel).order_by(UserModel.created_at.desc())
+        return [user_from_model(item) for item in db.scalars(statement).all()]
 
     def get_property_model(self, db: Session, property_id: str) -> PropertyModel | None:
         return db.get(PropertyModel, property_id)

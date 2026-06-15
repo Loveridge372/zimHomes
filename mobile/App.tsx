@@ -13,6 +13,7 @@ import { HomeScreen } from "./src/screens/HomeScreen";
 import { ListPropertyScreen } from "./src/screens/ListPropertyScreen";
 import { ManagementScreen } from "./src/screens/ManagementScreen";
 import { PaymentsScreen } from "./src/screens/PaymentsScreen";
+import { FavoritesProvider } from "./src/state/FavoritesContext";
 import { colors } from "./src/theme";
 import { User } from "./src/types";
 
@@ -33,42 +34,44 @@ export default function App() {
 
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <StatusBar style="dark" />
-        {currentUser ? (
-          <Tab.Navigator
-            screenOptions={({ route }) => ({
-              headerStyle: { backgroundColor: colors.surface },
-              headerTitleStyle: { color: colors.ink, fontWeight: "800" },
-              tabBarActiveTintColor: colors.green,
-              tabBarInactiveTintColor: colors.muted,
-              tabBarStyle: { borderTopColor: colors.line },
-              tabBarIcon: ({ color, size }) => {
-                const icons: Record<keyof RootTabParamList, keyof typeof Ionicons.glyphMap> = {
-                  Search: "search",
-                  List: "add-circle-outline",
-                  Manage: "business-outline",
-                  Payments: "card-outline",
-                  Activity: "calendar-outline",
-                  Assistant: "chatbubble-ellipses-outline",
-                  Admin: "shield-checkmark-outline"
-                };
-                return <Ionicons name={icons[route.name]} color={color} size={size} />;
-              }
-            })}
-          >
-            <Tab.Screen name="Search" component={HomeScreen} options={{ title: `Wana Imba - ${currentUser.role}` }} />
-            <Tab.Screen name="List" component={ListPropertyScreen} options={{ title: "List Property" }} />
-            <Tab.Screen name="Manage" component={ManagementScreen} options={{ title: "Management" }} />
-            <Tab.Screen name="Payments" component={PaymentsScreen} options={{ title: "Payments" }} />
-            <Tab.Screen name="Activity" component={ActivityScreen} options={{ title: "My Activity" }} />
-            <Tab.Screen name="Assistant" component={AssistantScreen} options={{ title: "Assistant" }} />
-            <Tab.Screen name="Admin" component={AdminScreen} options={{ title: "Admin" }} />
-          </Tab.Navigator>
-        ) : (
-          <AuthScreen onAuthenticated={(_token, user) => setCurrentUser(user)} />
-        )}
-      </NavigationContainer>
+      <FavoritesProvider>
+        <NavigationContainer>
+          <StatusBar style="dark" />
+          {currentUser ? (
+            <Tab.Navigator
+              screenOptions={({ route }) => ({
+                headerStyle: { backgroundColor: colors.surface },
+                headerTitleStyle: { color: colors.ink, fontWeight: "800" },
+                tabBarActiveTintColor: colors.green,
+                tabBarInactiveTintColor: colors.muted,
+                tabBarStyle: { borderTopColor: colors.line },
+                tabBarIcon: ({ color, size }) => {
+                  const icons: Record<keyof RootTabParamList, keyof typeof Ionicons.glyphMap> = {
+                    Search: "search",
+                    List: "add-circle-outline",
+                    Manage: "business-outline",
+                    Payments: "card-outline",
+                    Activity: "calendar-outline",
+                    Assistant: "chatbubble-ellipses-outline",
+                    Admin: "shield-checkmark-outline"
+                  };
+                  return <Ionicons name={icons[route.name]} color={color} size={size} />;
+                }
+              })}
+            >
+              <Tab.Screen name="Search" component={HomeScreen} options={{ title: `Wana Imba - ${currentUser.role}` }} />
+              <Tab.Screen name="List" component={ListPropertyScreen} options={{ title: "List Property" }} />
+              <Tab.Screen name="Manage" component={ManagementScreen} options={{ title: "Management" }} />
+              <Tab.Screen name="Payments" component={PaymentsScreen} options={{ title: "Payments" }} />
+              <Tab.Screen name="Activity" component={ActivityScreen} options={{ title: "My Activity" }} />
+              <Tab.Screen name="Assistant" component={AssistantScreen} options={{ title: "Assistant" }} />
+              <Tab.Screen name="Admin" component={AdminScreen} options={{ title: "Admin" }} />
+            </Tab.Navigator>
+          ) : (
+            <AuthScreen onAuthenticated={(_token, user) => setCurrentUser(user)} />
+          )}
+        </NavigationContainer>
+      </FavoritesProvider>
     </SafeAreaProvider>
   );
 }

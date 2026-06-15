@@ -1,4 +1,5 @@
-import { Image, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { Image, Pressable, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 import { getMediaUrl } from "../api/client";
 import { colors, spacing } from "../theme";
@@ -7,7 +8,9 @@ import { PrimaryButton } from "./PrimaryButton";
 
 type Props = {
   property: Property;
+  isFavorite?: boolean;
   onBookViewing?: (property: Property) => void;
+  onToggleFavorite?: (property: Property) => void;
   onViewDetails?: (property: Property) => void;
 };
 
@@ -15,7 +18,7 @@ function money(value: number, purpose: string) {
   return purpose === "rent" ? `$${value.toLocaleString()}/mo` : `$${value.toLocaleString()}`;
 }
 
-export function PropertyCard({ property, onBookViewing, onViewDetails }: Props) {
+export function PropertyCard({ property, isFavorite, onBookViewing, onToggleFavorite, onViewDetails }: Props) {
   const { width } = useWindowDimensions();
   const imageWidth = Math.max(280, width - 32);
   const imageUrls = property.image_urls?.map(getMediaUrl).filter(Boolean) ?? [];
@@ -39,12 +42,24 @@ export function PropertyCard({ property, onBookViewing, onViewDetails }: Props) 
         </View>
       )}
       <View style={styles.body}>
+        <View style={styles.headerRow}>
+          <Text style={styles.title}>{property.title}</Text>
+          {onToggleFavorite ? (
+            <Pressable
+              accessibilityLabel={isFavorite ? "Remove from saved properties" : "Save property"}
+              accessibilityRole="button"
+              onPress={() => onToggleFavorite(property)}
+              style={({ pressed }) => [styles.favoriteButton, isFavorite ? styles.favoriteActive : null, pressed ? styles.pressed : null]}
+            >
+              <Ionicons name={isFavorite ? "heart" : "heart-outline"} size={20} color={isFavorite ? colors.surface : colors.green} />
+            </Pressable>
+          ) : null}
+        </View>
         <View style={styles.chips}>
           <Text style={styles.chip}>{property.purpose === "rent" ? "For rent" : "For sale"}</Text>
           <Text style={styles.chip}>{property.property_type}</Text>
           {property.is_verified ? <Text style={styles.chip}>Verified</Text> : null}
         </View>
-        <Text style={styles.title}>{property.title}</Text>
         <Text style={styles.meta}>
           {property.suburb}, {property.city} - {property.bedrooms} bed - {property.bathrooms} bath
         </Text>
@@ -102,6 +117,29 @@ const styles = StyleSheet.create({
   body: {
     gap: spacing.sm,
     padding: spacing.md
+  },
+  headerRow: {
+    alignItems: "flex-start",
+    flexDirection: "row",
+    gap: spacing.sm,
+    justifyContent: "space-between"
+  },
+  favoriteButton: {
+    width: 38,
+    height: 38,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface
+  },
+  favoriteActive: {
+    borderColor: colors.green,
+    backgroundColor: colors.green
+  },
+  pressed: {
+    opacity: 0.8
   },
   chips: {
     flexDirection: "row",
