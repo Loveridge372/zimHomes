@@ -33,6 +33,15 @@ export type Payment = {
   redirect_url: string;
 };
 
+export type ViewingRequest = {
+  id: string;
+  property_id: string;
+  requester_id?: string | null;
+  preferred_time?: string | null;
+  message?: string | null;
+  status: string;
+};
+
 export type UserRole = "seeker" | "owner" | "buyer" | "agent" | "admin";
 
 export type User = {

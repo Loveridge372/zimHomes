@@ -6,7 +6,7 @@ from sqlalchemy import select
 from app.config import UPLOADS_DIR
 from app.database import SessionLocal, create_db_and_tables
 from app.models import PropertyModel, UserModel
-from app.routers import admin, auth, payments, properties
+from app.routers import admin, auth, payments, properties, viewings
 from app.security import hash_password
 
 
@@ -32,6 +32,7 @@ app.include_router(auth.router)
 app.include_router(properties.router)
 app.include_router(admin.router)
 app.include_router(payments.router)
+app.include_router(viewings.router)
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
 app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
 

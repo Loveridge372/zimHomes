@@ -1,8 +1,19 @@
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
-from app.models import PaymentModel, PropertyImageModel, PropertyModel, UserModel
-from app.schemas import Payment, PaymentIn, PaymentStatus, Property, PropertyImage, PropertyIn, PropertyStatus, Purpose
+from app.models import PaymentModel, PropertyImageModel, PropertyModel, UserModel, ViewingRequestModel
+from app.schemas import (
+    Payment,
+    PaymentIn,
+    PaymentStatus,
+    Property,
+    PropertyImage,
+    PropertyIn,
+    PropertyStatus,
+    Purpose,
+    ViewingRequest,
+    ViewingRequestIn,
+)
 
 
 def property_from_model(item: PropertyModel) -> Property:
@@ -149,6 +160,35 @@ class DatabaseStore:
         db.commit()
         db.refresh(item)
         return PropertyImage(id=item.id, property_id=item.property_id, image_url=item.image_url, sort_order=item.sort_order)
+
+    def create_viewing_request(
+        self,
+        db: Session,
+        payload: ViewingRequestIn,
+        requester: UserModel | None = None,
+    ) -> ViewingRequest | None:
+        property_item = db.get(PropertyModel, payload.property_id)
+        if not property_item or property_item.status != PropertyStatus.approved.value:
+            return None
+
+        item = ViewingRequestModel(
+            property_id=payload.property_id,
+            requester_id=requester.id if requester else None,
+            preferred_time=payload.preferred_time,
+            message=payload.message,
+            status="pending",
+        )
+        db.add(item)
+        db.commit()
+        db.refresh(item)
+        return ViewingRequest(
+            id=item.id,
+            property_id=item.property_id,
+            requester_id=item.requester_id,
+            preferred_time=item.preferred_time,
+            message=item.message,
+            status=item.status,
+        )
 
 
 store = DatabaseStore()

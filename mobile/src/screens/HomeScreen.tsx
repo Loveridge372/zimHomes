@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 
-import { getProperties, initiatePayment } from "../api/client";
+import { createViewingRequest, getProperties, initiatePayment } from "../api/client";
 import { Field } from "../components/Field";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { PropertyCard } from "../components/PropertyCard";
@@ -37,6 +37,10 @@ export function HomeScreen() {
 
   async function bookViewing(property: Property) {
     try {
+      const viewing = await createViewingRequest({
+        property_id: property.id,
+        message: `Viewing requested for ${property.title}`
+      });
       const payment = await initiatePayment({
         payment_type: "viewing_fee",
         amount_usd: 2,
@@ -44,9 +48,9 @@ export function HomeScreen() {
         payer_reference: "+263770000000",
         property_id: property.id
       });
-      Alert.alert("Viewing payment started", `Reference: ${payment.provider_reference}`);
-    } catch {
-      Alert.alert("Viewing request", "Payment will be connected once the backend is running.");
+      Alert.alert("Viewing requested", `Viewing: ${viewing.id.slice(0, 8)}\nPayment: ${payment.provider_reference}`);
+    } catch (error) {
+      Alert.alert("Viewing request failed", error instanceof Error ? error.message : "Please try again.");
     }
   }
 

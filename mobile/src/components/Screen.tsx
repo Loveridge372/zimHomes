@@ -1,23 +1,35 @@
 import { PropsWithChildren } from "react";
-import { ScrollView, StyleSheet, View } from "react-native";
+import { ImageBackground, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import { colors, spacing } from "../theme";
+import { spacing } from "../theme";
+
+const backgroundImage = require("../../assets/zimhomes-background.jpeg");
 
 export function Screen({ children }: PropsWithChildren) {
   return (
     <SafeAreaView style={styles.safe} edges={["left", "right"]}>
-      <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
-        <View style={styles.inner}>{children}</View>
-      </ScrollView>
+      <ImageBackground source={backgroundImage} resizeMode="cover" style={styles.background}>
+        <View style={styles.scrim}>
+          <ScrollView contentContainerStyle={styles.content} keyboardShouldPersistTaps="handled">
+            <View style={styles.inner}>{children}</View>
+          </ScrollView>
+        </View>
+      </ImageBackground>
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   safe: {
+    flex: 1
+  },
+  background: {
+    flex: 1
+  },
+  scrim: {
     flex: 1,
-    backgroundColor: colors.soft
+    backgroundColor: "rgba(244, 246, 241, 0.74)"
   },
   content: {
     padding: spacing.md

@@ -85,6 +85,18 @@ class PaymentModel(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
 
+class ViewingRequestModel(Base):
+    __tablename__ = "viewing_requests"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=new_id)
+    property_id: Mapped[str] = mapped_column(ForeignKey("properties.id"), index=True)
+    requester_id: Mapped[str | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
+    preferred_time: Mapped[str | None] = mapped_column(String(120), nullable=True)
+    message: Mapped[str | None] = mapped_column(Text, nullable=True)
+    status: Mapped[str] = mapped_column(String(40), default="pending", index=True)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+
 class AuthTokenModel(Base):
     __tablename__ = "auth_tokens"
 

@@ -1,7 +1,7 @@
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
-import { AuthResponse, Payment, Property, PropertyInput, User } from "../types";
+import { AuthResponse, Payment, Property, PropertyInput, User, ViewingRequest } from "../types";
 
 function getApiBaseUrl() {
   const configuredUrl = Constants.expoConfig?.extra?.apiBaseUrl;
@@ -164,6 +164,13 @@ export function initiatePayment(payload: {
   property_id?: string;
 }) {
   return request<Payment>("/payments/initiate", {
+    method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function createViewingRequest(payload: { property_id: string; preferred_time?: string; message?: string }) {
+  return request<ViewingRequest>("/viewings", {
     method: "POST",
     body: JSON.stringify(payload)
   });

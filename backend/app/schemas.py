@@ -81,6 +81,21 @@ class Payment(BaseModel):
     user_id: str | None = None
 
 
+class ViewingRequestIn(BaseModel):
+    property_id: str
+    preferred_time: str | None = None
+    message: str | None = None
+
+
+class ViewingRequest(BaseModel):
+    id: str
+    property_id: str
+    requester_id: str | None = None
+    preferred_time: str | None = None
+    message: str | None = None
+    status: str
+
+
 UserRole = Literal["seeker", "owner", "buyer", "agent", "admin"]
 
 

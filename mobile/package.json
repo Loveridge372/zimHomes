@@ -7,7 +7,7 @@
     "start": "expo start",
     "start:offline": "expo start --offline",
     "start:phone": "expo start --lan",
-    "start:phone:offline": "expo start --lan --offline",
+    "start:phone:ip": "powershell -NoProfile -ExecutionPolicy Bypass -Command \"$env:REACT_NATIVE_PACKAGER_HOSTNAME='192.168.8.114'; npx expo start --lan\"",
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",

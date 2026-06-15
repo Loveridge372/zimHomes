@@ -1,4 +1,4 @@
-import { Image, StyleSheet, Text, View } from "react-native";
+import { Image, ScrollView, StyleSheet, Text, View, useWindowDimensions } from "react-native";
 
 import { getMediaUrl } from "../api/client";
 import { colors, spacing } from "../theme";
@@ -15,12 +15,23 @@ function money(value: number, purpose: string) {
 }
 
 export function PropertyCard({ property, onBookViewing }: Props) {
-  const imageUrl = getMediaUrl(property.image_urls?.[0]);
+  const { width } = useWindowDimensions();
+  const imageWidth = Math.max(280, width - 32);
+  const imageUrls = property.image_urls?.map(getMediaUrl).filter(Boolean) ?? [];
 
   return (
     <View style={styles.card}>
-      {imageUrl ? (
-        <Image source={{ uri: imageUrl }} style={styles.image} />
+      {imageUrls.length ? (
+        <View>
+          <ScrollView horizontal pagingEnabled showsHorizontalScrollIndicator={false} style={styles.gallery}>
+            {imageUrls.map((imageUrl, index) => (
+              <Image key={`${imageUrl}-${index}`} source={{ uri: imageUrl }} style={[styles.image, { width: imageWidth }]} />
+            ))}
+          </ScrollView>
+          <View style={styles.photoCount}>
+            <Text style={styles.photoCountText}>{imageUrls.length} photo{imageUrls.length === 1 ? "" : "s"}</Text>
+          </View>
+        </View>
       ) : (
         <View style={styles.imageStub}>
           <Text style={styles.imageText}>{property.suburb}</Text>
@@ -64,9 +75,25 @@ const styles = StyleSheet.create({
     fontWeight: "900"
   },
   image: {
-    width: "100%",
     height: 180,
     backgroundColor: colors.line
+  },
+  gallery: {
+    backgroundColor: colors.line
+  },
+  photoCount: {
+    position: "absolute",
+    right: spacing.sm,
+    bottom: spacing.sm,
+    borderRadius: 8,
+    backgroundColor: "rgba(23, 34, 29, 0.82)",
+    paddingHorizontal: 9,
+    paddingVertical: 5
+  },
+  photoCountText: {
+    color: colors.surface,
+    fontSize: 12,
+    fontWeight: "900"
   },
   body: {
     gap: spacing.sm,
