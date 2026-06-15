@@ -16,9 +16,10 @@ export type Property = {
   management_option: "self_managed" | "zimhomes_managed";
   status: PropertyStatus;
   is_verified: boolean;
+  image_urls: string[];
 };
 
-export type PropertyInput = Omit<Property, "id" | "status" | "is_verified">;
+export type PropertyInput = Omit<Property, "id" | "status" | "is_verified" | "image_urls">;
 
 export type Payment = {
   id: string;

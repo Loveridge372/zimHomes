@@ -5,6 +5,7 @@ __pycache__/
 venv/
 backend/*.db
 backend/*.db-*
+backend/uploads/
 
 # Node / Expo
 node_modules/

@@ -1,5 +1,6 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Image, StyleSheet, Text, View } from "react-native";
 
+import { getMediaUrl } from "../api/client";
 import { colors, spacing } from "../theme";
 import { Property } from "../types";
 import { PrimaryButton } from "./PrimaryButton";
@@ -14,11 +15,17 @@ function money(value: number, purpose: string) {
 }
 
 export function PropertyCard({ property, onBookViewing }: Props) {
+  const imageUrl = getMediaUrl(property.image_urls?.[0]);
+
   return (
     <View style={styles.card}>
-      <View style={styles.imageStub}>
-        <Text style={styles.imageText}>{property.suburb}</Text>
-      </View>
+      {imageUrl ? (
+        <Image source={{ uri: imageUrl }} style={styles.image} />
+      ) : (
+        <View style={styles.imageStub}>
+          <Text style={styles.imageText}>{property.suburb}</Text>
+        </View>
+      )}
       <View style={styles.body}>
         <View style={styles.chips}>
           <Text style={styles.chip}>{property.purpose === "rent" ? "For rent" : "For sale"}</Text>
@@ -55,6 +62,11 @@ const styles = StyleSheet.create({
     color: colors.surface,
     fontSize: 24,
     fontWeight: "900"
+  },
+  image: {
+    width: "100%",
+    height: 180,
+    backgroundColor: colors.line
   },
   body: {
     gap: spacing.sm,

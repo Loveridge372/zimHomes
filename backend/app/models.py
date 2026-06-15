@@ -49,6 +49,23 @@ class PropertyModel(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
     owner: Mapped[UserModel | None] = relationship(back_populates="properties")
+    images: Mapped[list["PropertyImageModel"]] = relationship(
+        back_populates="property",
+        cascade="all, delete-orphan",
+        order_by="PropertyImageModel.sort_order",
+    )
+
+
+class PropertyImageModel(Base):
+    __tablename__ = "property_images"
+
+    id: Mapped[str] = mapped_column(String, primary_key=True, default=new_id)
+    property_id: Mapped[str] = mapped_column(ForeignKey("properties.id"), index=True)
+    image_url: Mapped[str] = mapped_column(String(255))
+    sort_order: Mapped[int] = mapped_column(Integer, default=0)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
+
+    property: Mapped[PropertyModel] = relationship(back_populates="images")
 
 
 class PaymentModel(Base):

@@ -1,7 +1,8 @@
 import { useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import * as ImagePicker from "expo-image-picker";
 
-import { getCurrentApiBaseUrl, initiatePayment, submitProperty } from "../api/client";
+import { getCurrentApiBaseUrl, initiatePayment, submitProperty, uploadPropertyImages } from "../api/client";
 import { Field } from "../components/Field";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { Screen } from "../components/Screen";
@@ -18,7 +19,27 @@ export function ListPropertyScreen() {
   const [bedrooms, setBedrooms] = useState("");
   const [description, setDescription] = useState("");
   const [management, setManagement] = useState<"self_managed" | "zimhomes_managed">("self_managed");
+  const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
   const [submitting, setSubmitting] = useState(false);
+
+  async function pickImages() {
+    const permission = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (!permission.granted) {
+      Alert.alert("Photo access needed", "Allow photo access to upload property pictures.");
+      return;
+    }
+
+    const result = await ImagePicker.launchImageLibraryAsync({
+      allowsMultipleSelection: true,
+      mediaTypes: ["images"],
+      quality: 0.82,
+      selectionLimit: 10
+    });
+
+    if (!result.canceled) {
+      setImages(result.assets.slice(0, 10));
+    }
+  }
 
   async function submit() {
     const payload: PropertyInput = {
@@ -37,6 +58,9 @@ export function ListPropertyScreen() {
     setSubmitting(true);
     try {
       const property = await submitProperty(payload);
+      if (images.length) {
+        await uploadPropertyImages(property.id, images);
+      }
       const payment = await initiatePayment({
         payment_type: "listing_fee",
         amount_usd: 5,
@@ -51,6 +75,7 @@ export function ListPropertyScreen() {
       setPrice("");
       setBedrooms("");
       setDescription("");
+      setImages([]);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
       Alert.alert(
@@ -67,6 +92,22 @@ export function ListPropertyScreen() {
       <View style={styles.info}>
         <Text style={styles.heading}>Owners can advertise or ask ZimHomes to manage the property.</Text>
         <Text style={styles.copy}>Basic listing fee is $5. Featured listing can be added later for $20.</Text>
+      </View>
+      <View style={styles.photoPanel}>
+        <View style={styles.photoHeader}>
+          <View>
+            <Text style={styles.photoTitle}>Property photos</Text>
+            <Text style={styles.photoCopy}>{images.length ? `${images.length} selected` : "Add up to 10 photos"}</Text>
+          </View>
+          <PrimaryButton label="Choose" onPress={pickImages} variant="secondary" />
+        </View>
+        {images.length ? (
+          <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={styles.previewRow}>
+            {images.map((image) => (
+              <Image key={image.assetId ?? image.uri} source={{ uri: image.uri }} style={styles.previewImage} />
+            ))}
+          </ScrollView>
+        ) : null}
       </View>
       <Field label="Property title" value={title} onChangeText={setTitle} placeholder="2-bedroom flat in Avondale" />
       <Field label="City" value={city} onChangeText={setCity} placeholder="Harare" />
@@ -111,5 +152,38 @@ const styles = StyleSheet.create({
   copy: {
     color: colors.muted,
     lineHeight: 21
+  },
+  photoPanel: {
+    gap: spacing.sm,
+    borderRadius: 8,
+    padding: spacing.md,
+    backgroundColor: colors.surface,
+    borderColor: colors.line,
+    borderWidth: 1
+  },
+  photoHeader: {
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: spacing.sm
+  },
+  photoTitle: {
+    color: colors.ink,
+    fontSize: 16,
+    fontWeight: "900"
+  },
+  photoCopy: {
+    color: colors.muted,
+    fontWeight: "700"
+  },
+  previewRow: {
+    gap: spacing.sm,
+    paddingRight: spacing.sm
+  },
+  previewImage: {
+    width: 92,
+    height: 92,
+    borderRadius: 8,
+    backgroundColor: colors.line
   }
 });

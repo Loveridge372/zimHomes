@@ -37,6 +37,14 @@ class Property(PropertyIn):
     status: PropertyStatus = PropertyStatus.pending_review
     is_verified: bool = False
     owner_id: str | None = None
+    image_urls: list[str] = Field(default_factory=list)
+
+
+class PropertyImage(BaseModel):
+    id: str
+    property_id: str
+    image_url: str
+    sort_order: int
 
 
 PaymentType = Literal[

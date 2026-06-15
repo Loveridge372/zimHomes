@@ -83,3 +83,19 @@ python tools/generate_agreement_docs.py
 ```
 
 Production flow should generate a lease or management agreement from saved property, owner, tenant, payment, and inspection data, then store the signed document against the relevant property record.
+
+## Property Photos
+
+The mobile app uses Expo Image Picker to select up to 10 property photos. The backend accepts multipart uploads at:
+
+```text
+POST /properties/{property_id}/images
+```
+
+Local development stores uploaded files in:
+
+```text
+backend/uploads/properties/{property_id}/
+```
+
+Those files are ignored by Git. Production should move image storage to Cloudinary or S3 and keep only the public image URLs in the database.

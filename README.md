@@ -46,6 +46,8 @@ Email: admin@zimhomes.local
 Password: AdminPass123
 ```
 
+Property photos uploaded during local development are stored under `backend/uploads/` and served from `/uploads/...`.
+
 ## Mobile App
 
 ```bash
@@ -60,9 +62,9 @@ The mobile app currently calls `http://127.0.0.1:8000`. If testing on a physical
 
 1. Install dependencies and run the backend plus mobile app locally.
 2. Add Alembic migrations and move production storage to PostgreSQL.
-3. Store property images in Cloudinary or S3.
+3. Move local property image storage to Cloudinary or S3.
 4. Integrate Paynow first for EcoCash, OneMoney, cards, ZimSwitch, InnBucks, and related local payment options.
-5. Add login, role-based permissions, and verification workflows for landlords and properties before listings go live.
+5. Add role-based permissions and verification workflows for landlords and properties before listings go live.
 
 ## Business Model
 

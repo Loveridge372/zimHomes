@@ -1,8 +1,8 @@
 from sqlalchemy import or_, select
 from sqlalchemy.orm import Session
 
-from app.models import PaymentModel, PropertyModel, UserModel
-from app.schemas import Payment, PaymentIn, PaymentStatus, Property, PropertyIn, PropertyStatus, Purpose
+from app.models import PaymentModel, PropertyImageModel, PropertyModel, UserModel
+from app.schemas import Payment, PaymentIn, PaymentStatus, Property, PropertyImage, PropertyIn, PropertyStatus, Purpose
 
 
 def property_from_model(item: PropertyModel) -> Property:
@@ -21,6 +21,7 @@ def property_from_model(item: PropertyModel) -> Property:
         status=PropertyStatus(item.status),
         is_verified=item.is_verified,
         owner_id=item.owner_id,
+        image_urls=[image.image_url for image in item.images],
     )
 
 
@@ -138,6 +139,16 @@ class DatabaseStore:
     def get_payment(self, db: Session, payment_id: str) -> Payment | None:
         item = db.get(PaymentModel, payment_id)
         return payment_from_model(item) if item else None
+
+    def get_property_model(self, db: Session, property_id: str) -> PropertyModel | None:
+        return db.get(PropertyModel, property_id)
+
+    def add_property_image(self, db: Session, property_id: str, image_url: str, sort_order: int) -> PropertyImage:
+        item = PropertyImageModel(property_id=property_id, image_url=image_url, sort_order=sort_order)
+        db.add(item)
+        db.commit()
+        db.refresh(item)
+        return PropertyImage(id=item.id, property_id=item.property_id, image_url=item.image_url, sort_order=item.sort_order)
 
 
 store = DatabaseStore()

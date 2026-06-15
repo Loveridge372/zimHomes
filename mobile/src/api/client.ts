@@ -29,14 +29,25 @@ export function getCurrentApiBaseUrl() {
   return API_BASE_URL;
 }
 
+export function getMediaUrl(path?: string) {
+  if (!path) {
+    return "";
+  }
+  if (path.startsWith("http://") || path.startsWith("https://")) {
+    return path;
+  }
+  return `${API_BASE_URL}${path}`;
+}
+
 export function setAuthToken(token: string | null) {
   authToken = token;
 }
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
+  const isFormData = options?.body instanceof FormData;
   const response = await fetch(`${API_BASE_URL}${path}`, {
     headers: {
-      "Content-Type": "application/json",
+      ...(!isFormData ? { "Content-Type": "application/json" } : {}),
       ...(authToken ? { Authorization: `Bearer ${authToken}` } : {}),
       ...(options?.headers ?? {})
     },
@@ -115,6 +126,23 @@ export function submitProperty(payload: PropertyInput) {
   return request<Property>("/properties", {
     method: "POST",
     body: JSON.stringify(payload)
+  });
+}
+
+export function uploadPropertyImages(propertyId: string, images: Array<{ uri: string; fileName?: string | null; mimeType?: string | null }>) {
+  const formData = new FormData();
+  images.forEach((image, index) => {
+    const fileName = image.fileName ?? `property-${index + 1}.jpg`;
+    formData.append("files", {
+      uri: image.uri,
+      name: fileName,
+      type: image.mimeType ?? "image/jpeg"
+    } as unknown as Blob);
+  });
+
+  return request<Array<{ id: string; property_id: string; image_url: string; sort_order: number }>>(`/properties/${propertyId}/images`, {
+    method: "POST",
+    body: formData
   });
 }
 
