@@ -1,6 +1,28 @@
+import Constants from "expo-constants";
+import { Platform } from "react-native";
+
 import { Payment, Property, PropertyInput } from "../types";
 
-const API_BASE_URL = "http://127.0.0.1:8000";
+function getApiBaseUrl() {
+  const configuredUrl = Constants.expoConfig?.extra?.apiBaseUrl;
+  if (typeof configuredUrl === "string" && configuredUrl.length > 0) {
+    return configuredUrl;
+  }
+
+  const expoHostUri =
+    Constants.expoConfig?.hostUri ??
+    (Constants.manifest as { debuggerHost?: string } | null)?.debuggerHost ??
+    (Constants.manifest2 as { extra?: { expoClient?: { hostUri?: string } } } | null)?.extra?.expoClient?.hostUri;
+
+  const host = typeof expoHostUri === "string" ? expoHostUri.split(":")[0] : "";
+  if (host) {
+    return `http://${host}:8000`;
+  }
+
+  return Platform.OS === "android" ? "http://10.0.2.2:8000" : "http://127.0.0.1:8000";
+}
+
+const API_BASE_URL = getApiBaseUrl();
 
 async function request<T>(path: string, options?: RequestInit): Promise<T> {
   const response = await fetch(`${API_BASE_URL}${path}`, {
