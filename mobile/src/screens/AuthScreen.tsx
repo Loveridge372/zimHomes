@@ -79,7 +79,7 @@ export function AuthScreen({ onAuthenticated }: Props) {
     <Screen>
       <View style={styles.hero}>
         <Text style={styles.eyebrow}>Welcome to</Text>
-        <Text style={styles.title}>ZimHomes</Text>
+        <Text style={styles.title}>Wana Imba</Text>
         <Text style={styles.copy}>Create an account to list properties, request viewings, manage payments, and save your activity.</Text>
       </View>
 

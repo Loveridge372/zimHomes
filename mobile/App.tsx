@@ -6,7 +6,9 @@ import { StatusBar } from "expo-status-bar";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
 import { AuthScreen } from "./src/screens/AuthScreen";
+import { ActivityScreen } from "./src/screens/ActivityScreen";
 import { AdminScreen } from "./src/screens/AdminScreen";
+import { AssistantScreen } from "./src/screens/AssistantScreen";
 import { HomeScreen } from "./src/screens/HomeScreen";
 import { ListPropertyScreen } from "./src/screens/ListPropertyScreen";
 import { ManagementScreen } from "./src/screens/ManagementScreen";
@@ -19,6 +21,8 @@ export type RootTabParamList = {
   List: undefined;
   Manage: undefined;
   Payments: undefined;
+  Activity: undefined;
+  Assistant: undefined;
   Admin: undefined;
 };
 
@@ -45,16 +49,20 @@ export default function App() {
                   List: "add-circle-outline",
                   Manage: "business-outline",
                   Payments: "card-outline",
+                  Activity: "calendar-outline",
+                  Assistant: "chatbubble-ellipses-outline",
                   Admin: "shield-checkmark-outline"
                 };
                 return <Ionicons name={icons[route.name]} color={color} size={size} />;
               }
             })}
           >
-            <Tab.Screen name="Search" component={HomeScreen} options={{ title: `ZimHomes - ${currentUser.role}` }} />
+            <Tab.Screen name="Search" component={HomeScreen} options={{ title: `Wana Imba - ${currentUser.role}` }} />
             <Tab.Screen name="List" component={ListPropertyScreen} options={{ title: "List Property" }} />
             <Tab.Screen name="Manage" component={ManagementScreen} options={{ title: "Management" }} />
             <Tab.Screen name="Payments" component={PaymentsScreen} options={{ title: "Payments" }} />
+            <Tab.Screen name="Activity" component={ActivityScreen} options={{ title: "My Activity" }} />
+            <Tab.Screen name="Assistant" component={AssistantScreen} options={{ title: "Assistant" }} />
             <Tab.Screen name="Admin" component={AdminScreen} options={{ title: "Admin" }} />
           </Tab.Navigator>
         ) : (

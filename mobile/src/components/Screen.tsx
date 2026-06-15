@@ -4,7 +4,7 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 import { spacing } from "../theme";
 
-const backgroundImage = require("../../assets/zimhomes-background.jpeg");
+const backgroundImage = require("../../assets/wana-imba-background.jpeg");
 
 export function Screen({ children }: PropsWithChildren) {
   return (

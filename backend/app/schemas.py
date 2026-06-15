@@ -91,9 +91,15 @@ class ViewingRequest(BaseModel):
     id: str
     property_id: str
     requester_id: str | None = None
+    property_title: str | None = None
+    property_location: str | None = None
     preferred_time: str | None = None
     message: str | None = None
     status: str
+
+
+class ViewingStatusUpdate(BaseModel):
+    status: Literal["pending", "confirmed", "completed", "cancelled"]
 
 
 UserRole = Literal["seeker", "owner", "buyer", "agent", "admin"]
@@ -123,3 +129,11 @@ class User(BaseModel):
 class AuthResponse(BaseModel):
     token: str
     user: User
+
+
+class AssistantRequest(BaseModel):
+    message: str = Field(min_length=1)
+
+
+class AssistantReply(BaseModel):
+    reply: str

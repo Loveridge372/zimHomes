@@ -90,7 +90,7 @@ export function ListPropertyScreen() {
   return (
     <Screen>
       <View style={styles.info}>
-        <Text style={styles.heading}>Owners can advertise or ask ZimHomes to manage the property.</Text>
+        <Text style={styles.heading}>Owners can advertise or ask Wana Imba to manage the property.</Text>
         <Text style={styles.copy}>Basic listing fee is $5. Featured listing can be added later for $20.</Text>
       </View>
       <View style={styles.photoPanel}>

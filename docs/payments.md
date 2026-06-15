@@ -1,4 +1,4 @@
-# ZimHomes Payment Flow
+# Wana Imba Payment Flow
 
 Recommended first gateway: Paynow, because it supports Zimbabwe-friendly payment methods.
 
@@ -9,7 +9,7 @@ Recommended first gateway: Paynow, because it supports Zimbabwe-friendly payment
 - Viewing booking fee
 - Rental deposit
 - Monthly rent collection
-- ZimHomes management fee
+- Wana Imba management fee
 
 ## Flow
 
@@ -26,7 +26,7 @@ Recommended first gateway: Paynow, because it supports Zimbabwe-friendly payment
 - See pending and paid payments.
 - Reconcile payments by provider reference.
 - Manually mark exceptional payments after finance review.
-- Export monthly reports for owners and ZimHomes revenue.
+- Export monthly reports for owners and Wana Imba revenue.
 
 ## Security Notes
 

@@ -96,6 +96,8 @@ class ViewingRequestModel(Base):
     status: Mapped[str] = mapped_column(String(40), default="pending", index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
+    property: Mapped[PropertyModel] = relationship()
+
 
 class AuthTokenModel(Base):
     __tablename__ = "auth_tokens"

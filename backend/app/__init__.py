@@ -1,1 +1,1 @@
-"""ZimHomes backend package."""
+"""Wana Imba backend package."""

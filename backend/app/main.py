@@ -6,11 +6,11 @@ from sqlalchemy import select
 from app.config import UPLOADS_DIR
 from app.database import SessionLocal, create_db_and_tables
 from app.models import PropertyModel, UserModel
-from app.routers import admin, auth, payments, properties, viewings
+from app.routers import admin, assistant, auth, payments, properties, viewings
 from app.security import hash_password
 
 
-app = FastAPI(title="ZimHomes API", version="0.1.0")
+app = FastAPI(title="Wana Imba API", version="0.1.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -29,6 +29,7 @@ app.add_middleware(
 )
 
 app.include_router(auth.router)
+app.include_router(assistant.router)
 app.include_router(properties.router)
 app.include_router(admin.router)
 app.include_router(payments.router)
@@ -39,7 +40,7 @@ app.mount("/uploads", StaticFiles(directory=str(UPLOADS_DIR)), name="uploads")
 
 @app.get("/health")
 def health() -> dict[str, str]:
-    return {"status": "ok", "service": "zimhomes-api"}
+    return {"status": "ok", "service": "wana-imba-api"}
 
 
 @app.on_event("startup")
@@ -54,7 +55,7 @@ def seed_demo_data() -> None:
         admin = db.scalar(select(UserModel).where(UserModel.email == "admin@zimhomes.local"))
         if not admin:
             admin = UserModel(
-                full_name="ZimHomes Admin",
+                full_name="Wana Imba Admin",
                 email="admin@zimhomes.local",
                 phone="+263770000000",
                 password_hash=hash_password("AdminPass123"),

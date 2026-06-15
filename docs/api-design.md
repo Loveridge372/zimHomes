@@ -1,4 +1,4 @@
-# ZimHomes API Design
+# Wana Imba API Design
 
 Recommended backend: FastAPI with PostgreSQL.
 

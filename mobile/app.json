@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "ZimHomes",
-    "slug": "zimhomes",
+    "name": "Wana Imba",
+    "slug": "wana-imba",
     "version": "0.1.0",
     "orientation": "portrait",
-    "scheme": "zimhomes",
+    "scheme": "wanaimba",
     "userInterfaceStyle": "light",
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -14,6 +14,11 @@
       "adaptiveIcon": {
         "backgroundColor": "#11613b"
       }
+    },
+    "splash": {
+      "image": "./assets/wana-imba-background.jpeg",
+      "resizeMode": "cover",
+      "backgroundColor": "#11613b"
     },
     "web": {
       "bundler": "metro"

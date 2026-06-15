@@ -14,7 +14,7 @@ export function ManagementScreen() {
   return (
     <Screen>
       <View style={styles.hero}>
-        <Text style={styles.eyebrow}>ZimHomes managed</Text>
+        <Text style={styles.eyebrow}>Wana Imba managed</Text>
         <Text style={styles.title}>We can act as your property agent.</Text>
         <Text style={styles.copy}>Recommended monthly management fee: 8% to 12% of collected rent.</Text>
       </View>

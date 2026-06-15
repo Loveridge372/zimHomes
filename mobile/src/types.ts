@@ -37,6 +37,8 @@ export type ViewingRequest = {
   id: string;
   property_id: string;
   requester_id?: string | null;
+  property_title?: string | null;
+  property_location?: string | null;
   preferred_time?: string | null;
   message?: string | null;
   status: string;

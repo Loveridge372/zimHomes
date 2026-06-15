@@ -1,4 +1,4 @@
--- ZimHomes initial PostgreSQL schema.
+-- Wana Imba initial PostgreSQL schema.
 
 CREATE TABLE users (
   id UUID PRIMARY KEY,

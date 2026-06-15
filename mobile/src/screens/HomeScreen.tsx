@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 
-import { createViewingRequest, getProperties, initiatePayment } from "../api/client";
+import { createViewingRequest, getCurrentApiBaseUrl, getProperties, initiatePayment } from "../api/client";
 import { Field } from "../components/Field";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { PropertyCard } from "../components/PropertyCard";
+import { PropertyDetails } from "../components/PropertyDetails";
 import { Screen } from "../components/Screen";
 import { demoProperties } from "../data/demoProperties";
 import { colors, spacing } from "../theme";
@@ -15,6 +16,7 @@ export function HomeScreen() {
   const [purpose, setPurpose] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
   const [properties, setProperties] = useState<Property[]>(demoProperties);
+  const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [loading, setLoading] = useState(false);
   const [searched, setSearched] = useState(false);
 
@@ -50,7 +52,8 @@ export function HomeScreen() {
       });
       Alert.alert("Viewing requested", `Viewing: ${viewing.id.slice(0, 8)}\nPayment: ${payment.provider_reference}`);
     } catch (error) {
-      Alert.alert("Viewing request failed", error instanceof Error ? error.message : "Please try again.");
+      const message = error instanceof Error ? error.message : "Please try again.";
+      Alert.alert("Viewing request failed", `${message}\n\nBackend URL: ${getCurrentApiBaseUrl()}`);
     }
   }
 
@@ -58,11 +61,19 @@ export function HomeScreen() {
     loadProperties();
   }, []);
 
+  if (selectedProperty) {
+    return (
+      <Screen>
+        <PropertyDetails property={selectedProperty} onBack={() => setSelectedProperty(null)} onBookViewing={bookViewing} />
+      </Screen>
+    );
+  }
+
   return (
     <Screen>
       <View style={styles.hero}>
         <Text style={styles.eyebrow}>Find, Rent, Buy, Manage</Text>
-        <Text style={styles.title}>ZimHomes</Text>
+        <Text style={styles.title}>Wana Imba</Text>
         <Text style={styles.copy}>Search verified rentals and properties for sale across Zimbabwe.</Text>
       </View>
 
@@ -80,7 +91,14 @@ export function HomeScreen() {
       </View>
 
       {properties.length ? (
-        properties.map((property) => <PropertyCard key={property.id} property={property} onBookViewing={bookViewing} />)
+        properties.map((property) => (
+          <PropertyCard
+            key={property.id}
+            property={property}
+            onBookViewing={bookViewing}
+            onViewDetails={(selected) => setSelectedProperty(selected)}
+          />
+        ))
       ) : (
         <View style={styles.emptyState}>
           <Text style={styles.emptyTitle}>No approved properties found</Text>

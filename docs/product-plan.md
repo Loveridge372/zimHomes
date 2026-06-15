@@ -1,15 +1,15 @@
-# ZimHomes Product Plan
+# Wana Imba Product Plan
 
 ## Vision
 
-ZimHomes helps people in Zimbabwe find accommodation, buy property, advertise property, and outsource property management.
+Wana Imba helps people in Zimbabwe find accommodation, buy property, advertise property, and outsource property management.
 
 ## User Roles
 
 - Accommodation seeker: searches rentals, saves favourites, books viewings, pays viewing fees or deposits.
 - Buyer: searches sales listings, requests viewings, contacts verified sellers or agents.
-- Property owner: uploads listings, pays listing fees, tracks inquiries, chooses self-managed or ZimHomes managed.
-- ZimHomes admin: approves listings, verifies owners, manages payments, monitors reports, features listings.
+- Property owner: uploads listings, pays listing fees, tracks inquiries, chooses self-managed or Wana Imba managed.
+- Wana Imba admin: approves listings, verifies owners, manages payments, monitors reports, features listings.
 - Agent or property manager: handles rent collection, inspections, maintenance, and owner reporting.
 
 ## MVP Features

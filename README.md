@@ -1,6 +1,6 @@
-# ZimHomes
+# Wana Imba
 
-ZimHomes is a Zimbabwe-focused property marketplace and property-management platform.
+Wana Imba is a Zimbabwe-focused property marketplace and property-management platform.
 
 Tagline: **Find, Rent, Buy, Manage.**
 
@@ -10,7 +10,7 @@ This workspace now contains a real starter structure plus the original static MV
 - Rental and sale listings
 - Owner listing submission
 - Admin listing approval
-- ZimHomes managed-property service positioning
+- Wana Imba managed-property service positioning
 - Payment flow preview for listing fees, featured listings, viewing fees, rent, and deposits
 
 ## Project Structure

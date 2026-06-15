@@ -1,4 +1,4 @@
-# ZimHomes Residential Lease Agreement
+# Wana Imba Residential Lease Agreement
 
 This template is a starting draft for residential rentals in Zimbabwe. It should be reviewed by a qualified Zimbabwean legal practitioner before live use.
 
@@ -153,20 +153,20 @@ On vacating, the Tenant must:
 5. Return all keys, remotes, cards, and access devices.
 6. Attend a final inspection or allow the Landlord to conduct one.
 
-## 15. ZimHomes Role
+## 15. Wana Imba Role
 
-If this lease is facilitated or managed through ZimHomes, the Parties authorise ZimHomes to:
+If this lease is facilitated or managed through Wana Imba, the Parties authorise Wana Imba to:
 
 - Record the lease details.
 - Collect platform payments where applicable.
 - Send reminders and notices.
 - Coordinate viewing, inspection, maintenance, and payment records where applicable.
 
-ZimHomes is not a party to this lease unless expressly stated and signed as a party.
+Wana Imba is not a party to this lease unless expressly stated and signed as a party.
 
 ## 16. Notices
 
-Notices may be sent by hand delivery, email, WhatsApp, SMS, or through the ZimHomes platform, using the contact details in this Agreement.
+Notices may be sent by hand delivery, email, WhatsApp, SMS, or through the Wana Imba platform, using the contact details in this Agreement.
 
 A Party must notify the other Party of any change in contact details.
 
@@ -226,5 +226,4 @@ Date: ______________________________
 - Furniture: [Condition]
 - Keys / remotes / access cards issued: [List]
 - Meter readings at handover: [Electricity / Water]
-- Photos uploaded to ZimHomes: [Yes / No]
-
+- Photos uploaded to Wana Imba: [Yes / No]

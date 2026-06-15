@@ -1,4 +1,4 @@
-# ZimHomes Development Guide
+# Wana Imba Development Guide
 
 This repo now has three useful parts:
 

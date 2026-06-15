@@ -175,3 +175,25 @@ export function createViewingRequest(payload: { property_id: string; preferred_t
     body: JSON.stringify(payload)
   });
 }
+
+export function getMyViewingRequests() {
+  return request<ViewingRequest[]>("/viewings/mine");
+}
+
+export function getViewingRequests() {
+  return request<ViewingRequest[]>("/viewings");
+}
+
+export function updateViewingStatus(viewingId: string, status: "pending" | "confirmed" | "completed" | "cancelled") {
+  return request<ViewingRequest>(`/viewings/${viewingId}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status })
+  });
+}
+
+export function askAssistant(message: string) {
+  return request<{ reply: string }>("/assistant/chat", {
+    method: "POST",
+    body: JSON.stringify({ message })
+  });
+}

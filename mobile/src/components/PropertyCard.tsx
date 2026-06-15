@@ -8,13 +8,14 @@ import { PrimaryButton } from "./PrimaryButton";
 type Props = {
   property: Property;
   onBookViewing?: (property: Property) => void;
+  onViewDetails?: (property: Property) => void;
 };
 
 function money(value: number, purpose: string) {
   return purpose === "rent" ? `$${value.toLocaleString()}/mo` : `$${value.toLocaleString()}`;
 }
 
-export function PropertyCard({ property, onBookViewing }: Props) {
+export function PropertyCard({ property, onBookViewing, onViewDetails }: Props) {
   const { width } = useWindowDimensions();
   const imageWidth = Math.max(280, width - 32);
   const imageUrls = property.image_urls?.map(getMediaUrl).filter(Boolean) ?? [];
@@ -49,7 +50,10 @@ export function PropertyCard({ property, onBookViewing }: Props) {
         </Text>
         <Text style={styles.price}>{money(property.price_usd, property.purpose)}</Text>
         <Text style={styles.description}>{property.description}</Text>
-        <PrimaryButton label="Book viewing" onPress={() => onBookViewing?.(property)} />
+        <View style={styles.actions}>
+          <PrimaryButton label="View details" onPress={() => onViewDetails?.(property)} />
+          <PrimaryButton label="Book viewing" onPress={() => onBookViewing?.(property)} variant="secondary" />
+        </View>
       </View>
     </View>
   );
@@ -131,5 +135,8 @@ const styles = StyleSheet.create({
   description: {
     color: colors.muted,
     lineHeight: 21
+  },
+  actions: {
+    gap: spacing.sm
   }
 });

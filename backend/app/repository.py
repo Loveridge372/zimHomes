@@ -13,6 +13,7 @@ from app.schemas import (
     Purpose,
     ViewingRequest,
     ViewingRequestIn,
+    ViewingStatusUpdate,
 )
 
 
@@ -49,6 +50,20 @@ def payment_from_model(item: PaymentModel) -> Payment:
         redirect_url=item.redirect_url,
         property_id=item.property_id,
         user_id=item.user_id,
+    )
+
+
+def viewing_from_model(item: ViewingRequestModel) -> ViewingRequest:
+    property_item = item.property
+    return ViewingRequest(
+        id=item.id,
+        property_id=item.property_id,
+        requester_id=item.requester_id,
+        property_title=property_item.title if property_item else None,
+        property_location=f"{property_item.suburb}, {property_item.city}" if property_item else None,
+        preferred_time=item.preferred_time,
+        message=item.message,
+        status=item.status,
     )
 
 
@@ -132,7 +147,7 @@ class DatabaseStore:
         )
         db.add(item)
         db.flush()
-        item.provider_reference = f"ZH-{item.id[:8].upper()}"
+        item.provider_reference = f"WI-{item.id[:8].upper()}"
         item.redirect_url = f"https://paynow.example/checkout/{item.id}"
         db.commit()
         db.refresh(item)
@@ -181,14 +196,22 @@ class DatabaseStore:
         db.add(item)
         db.commit()
         db.refresh(item)
-        return ViewingRequest(
-            id=item.id,
-            property_id=item.property_id,
-            requester_id=item.requester_id,
-            preferred_time=item.preferred_time,
-            message=item.message,
-            status=item.status,
-        )
+        return viewing_from_model(item)
+
+    def list_viewing_requests(self, db: Session, requester: UserModel | None = None) -> list[ViewingRequest]:
+        statement = select(ViewingRequestModel).order_by(ViewingRequestModel.created_at.desc())
+        if requester:
+            statement = statement.where(ViewingRequestModel.requester_id == requester.id)
+        return [viewing_from_model(item) for item in db.scalars(statement).all()]
+
+    def update_viewing_status(self, db: Session, viewing_id: str, status: str) -> ViewingRequest | None:
+        item = db.get(ViewingRequestModel, viewing_id)
+        if not item:
+            return None
+        item.status = status
+        db.commit()
+        db.refresh(item)
+        return viewing_from_model(item)
 
 
 store = DatabaseStore()

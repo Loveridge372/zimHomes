@@ -1,4 +1,4 @@
-# ZimHomes Property Management Agreement
+# Wana Imba Property Management Agreement
 
 This template is a starting draft for property management services in Zimbabwe. It should be reviewed by a qualified Zimbabwean legal practitioner before live use.
 
@@ -14,13 +14,13 @@ Email: [Owner Email]
 
 and
 
-**Manager:** ZimHomes [Private Limited / Trading Name]  
+**Manager:** Wana Imba [Private Limited / Trading Name]  
 Registration Number: [Company Registration Number]  
-Address: [ZimHomes Address]  
-Phone: [ZimHomes Phone]  
-Email: [ZimHomes Email]
+Address: [Wana Imba Address]  
+Phone: [Wana Imba Phone]  
+Email: [Wana Imba Email]
 
-The Owner appoints ZimHomes as property manager for the property described below.
+The Owner appoints Wana Imba as property manager for the property described below.
 
 ## 2. Property
 
@@ -30,7 +30,7 @@ The Owner appoints ZimHomes as property manager for the property described below
 - Property type: [Room / Cottage / Flat / House / Commercial / Other]
 - Ownership / authority document checked: [Title Deed / Lease Authority / Power of Attorney / Other]
 
-The Owner confirms that the Owner has legal authority to appoint ZimHomes to manage the property.
+The Owner confirms that the Owner has legal authority to appoint Wana Imba to manage the property.
 
 ## 3. Appointment and Term
 
@@ -40,9 +40,9 @@ The appointment is: [Exclusive / Non-exclusive].
 
 ## 4. Services
 
-ZimHomes may provide the following services:
+Wana Imba may provide the following services:
 
-1. Advertise the property on ZimHomes and approved marketing channels.
+1. Advertise the property on Wana Imba and approved marketing channels.
 2. Receive and screen tenant inquiries.
 3. Arrange viewings.
 4. Collect tenant application information.
@@ -57,7 +57,7 @@ ZimHomes may provide the following services:
 
 ## 5. Management Fee
 
-The Owner will pay ZimHomes a management fee equal to **[Percentage]%** of rent collected each month.
+The Owner will pay Wana Imba a management fee equal to **[Percentage]%** of rent collected each month.
 
 Recommended starting range: **8% to 12%** of collected monthly rent.
 
@@ -79,9 +79,9 @@ No unlisted fee may be charged unless approved by the Owner in writing.
 
 ## 7. Rent Collection and Owner Payments
 
-ZimHomes will collect rent through approved payment methods, including Paynow-supported channels, bank transfer, mobile money, or other agreed methods.
+Wana Imba will collect rent through approved payment methods, including Paynow-supported channels, bank transfer, mobile money, or other agreed methods.
 
-ZimHomes will remit the Owner's net rental proceeds by **[Day]** of each month, after deducting approved fees, commissions, maintenance costs, and any agreed charges.
+Wana Imba will remit the Owner's net rental proceeds by **[Day]** of each month, after deducting approved fees, commissions, maintenance costs, and any agreed charges.
 
 Owner payment details:
 
@@ -94,16 +94,16 @@ Owner payment details:
 Tenant deposits must be recorded clearly and held or transferred according to the arrangement selected below:
 
 - Deposit held by Owner: [Yes / No]
-- Deposit held by ZimHomes: [Yes / No]
+- Deposit held by Wana Imba: [Yes / No]
 - Deposit held in separate account: [Yes / No]
 
 Deposit deductions may only be made for lawful and documented reasons such as unpaid rent, unpaid utilities, damage beyond fair wear and tear, missing items, cleaning, or agreed costs.
 
 ## 9. Maintenance Authority
 
-ZimHomes may approve urgent repairs up to **USD [Amount]** without prior Owner approval where delay may cause damage, safety risk, security risk, or tenant hardship.
+Wana Imba may approve urgent repairs up to **USD [Amount]** without prior Owner approval where delay may cause damage, safety risk, security risk, or tenant hardship.
 
-For non-urgent repairs above **USD [Amount]**, ZimHomes must obtain Owner approval before work begins.
+For non-urgent repairs above **USD [Amount]**, Wana Imba must obtain Owner approval before work begins.
 
 The Owner remains responsible for funding approved repairs unless the damage is recoverable from the tenant.
 
@@ -116,12 +116,12 @@ The Owner agrees to:
 3. Disclose known defects, disputes, mortgages, restrictions, or legal issues affecting the property.
 4. Keep the property reasonably fit for rental occupation.
 5. Fund approved repairs and statutory or municipal obligations.
-6. Not independently interfere with tenants placed or managed by ZimHomes without notifying ZimHomes.
+6. Not independently interfere with tenants placed or managed by Wana Imba without notifying Wana Imba.
 7. Honour leases and commitments made with the Owner's authority.
 
-## 11. ZimHomes Obligations
+## 11. Wana Imba Obligations
 
-ZimHomes agrees to:
+Wana Imba agrees to:
 
 1. Act honestly and with reasonable care.
 2. Keep reasonable records of inquiries, leases, payments, maintenance, and owner statements.
@@ -133,18 +133,18 @@ ZimHomes agrees to:
 
 ## 12. Tenant Selection
 
-The Owner may choose whether ZimHomes has authority to approve tenants:
+The Owner may choose whether Wana Imba has authority to approve tenants:
 
-- ZimHomes may approve tenants without further Owner consent: [Yes / No]
+- Wana Imba may approve tenants without further Owner consent: [Yes / No]
 - Owner approval required before lease signing: [Yes / No]
 
 Tenant screening may include identity information, contact details, employment/income information, references, and previous rental history where available and lawful.
 
 ## 13. Marketing and Listing Authority
 
-The Owner authorises ZimHomes to use property photos, descriptions, location details, pricing, and availability information for advertising.
+The Owner authorises Wana Imba to use property photos, descriptions, location details, pricing, and availability information for advertising.
 
-ZimHomes may add a verified or managed-property badge after internal verification.
+Wana Imba may add a verified or managed-property badge after internal verification.
 
 The Owner confirms that all uploaded images and information are accurate and may be used for marketing the property.
 
@@ -152,25 +152,25 @@ The Owner confirms that all uploaded images and information are accurate and may
 
 The Owner is responsible for property insurance unless otherwise agreed.
 
-ZimHomes is not liable for loss caused by tenant conduct, criminal activity, market vacancy, municipal service failure, force majeure, or property defects that were not caused by ZimHomes negligence or misconduct.
+Wana Imba is not liable for loss caused by tenant conduct, criminal activity, market vacancy, municipal service failure, force majeure, or property defects that were not caused by Wana Imba negligence or misconduct.
 
 ## 15. Termination
 
 Either Party may terminate this Agreement by giving **[Number]** days' written notice.
 
-ZimHomes may terminate immediately if:
+Wana Imba may terminate immediately if:
 
 - The Owner provided false ownership or authority information.
 - The property is unsafe or unlawful to rent.
 - The Owner refuses necessary repairs.
-- The Owner asks ZimHomes to act unlawfully.
+- The Owner asks Wana Imba to act unlawfully.
 - Fees remain unpaid after written notice.
 
 On termination, the Parties must reconcile rent, deposits, fees, documents, keys, tenant records, and outstanding maintenance matters.
 
 ## 16. Commission Protection
 
-If ZimHomes introduces a tenant, buyer, or occupant who later rents or buys the property directly from the Owner within **[Number]** months after introduction, the Owner must pay the agreed tenant placement fee, sales commission, or other agreed commission.
+If Wana Imba introduces a tenant, buyer, or occupant who later rents or buys the property directly from the Owner within **[Number]** months after introduction, the Owner must pay the agreed tenant placement fee, sales commission, or other agreed commission.
 
 ## 17. Confidentiality and Data
 
@@ -178,7 +178,7 @@ The Parties must keep private information confidential, except where disclosure 
 
 ## 18. Notices
 
-Notices may be sent by hand delivery, email, WhatsApp, SMS, or through the ZimHomes platform, using the contact details in this Agreement.
+Notices may be sent by hand delivery, email, WhatsApp, SMS, or through the Wana Imba platform, using the contact details in this Agreement.
 
 ## 19. Governing Law and Disputes
 
@@ -200,7 +200,7 @@ Signature: _________________________
 
 Date: ______________________________
 
-Signed for ZimHomes:
+Signed for Wana Imba:
 
 Name: ______________________________
 
@@ -238,4 +238,3 @@ Date: ______________________________
 - Emergency repair limit agreed: USD [Amount]
 - Rent collection method confirmed: [Yes / No]
 - Owner payout details confirmed: [Yes / No]
-
