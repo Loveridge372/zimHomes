@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 
-import { initiatePayment } from "../api/client";
+import { getCurrentApiBaseUrl, initiatePayment } from "../api/client";
 import { Field } from "../components/Field";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { Screen } from "../components/Screen";
@@ -24,8 +24,9 @@ export function PaymentsScreen() {
         payer_reference: reference
       });
       Alert.alert("Payment started", `${payment.provider_reference} is ${payment.status}.`);
-    } catch {
-      Alert.alert("Backend needed", "Run the FastAPI backend to create real payment records.");
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "Unknown error";
+      Alert.alert("Backend needed", `The app tried ${getCurrentApiBaseUrl()}.\n\nRestart backend with --host 0.0.0.0.\n\n${message}`);
     } finally {
       setLoading(false);
     }

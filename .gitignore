@@ -3,6 +3,8 @@ __pycache__/
 *.py[cod]
 .venv/
 venv/
+backend/*.db
+backend/*.db-*
 
 # Node / Expo
 node_modules/

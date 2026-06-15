@@ -31,3 +31,18 @@ export type Payment = {
   status: "pending" | "paid" | "failed" | "cancelled";
   redirect_url: string;
 };
+
+export type UserRole = "seeker" | "owner" | "buyer" | "agent" | "admin";
+
+export type User = {
+  id: string;
+  full_name: string;
+  email: string;
+  phone?: string | null;
+  role: UserRole;
+};
+
+export type AuthResponse = {
+  token: string;
+  user: User;
+};

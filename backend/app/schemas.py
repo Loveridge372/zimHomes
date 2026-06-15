@@ -36,6 +36,7 @@ class Property(PropertyIn):
     id: str
     status: PropertyStatus = PropertyStatus.pending_review
     is_verified: bool = False
+    owner_id: str | None = None
 
 
 PaymentType = Literal[
@@ -68,3 +69,34 @@ class Payment(BaseModel):
     provider_reference: str
     status: PaymentStatus = "pending"
     redirect_url: str
+    property_id: str | None = None
+    user_id: str | None = None
+
+
+UserRole = Literal["seeker", "owner", "buyer", "agent", "admin"]
+
+
+class UserRegister(BaseModel):
+    full_name: str = Field(min_length=2)
+    email: str = Field(min_length=5)
+    phone: str | None = None
+    password: str = Field(min_length=8)
+    role: UserRole = "seeker"
+
+
+class UserLogin(BaseModel):
+    email: str = Field(min_length=5)
+    password: str = Field(min_length=8)
+
+
+class User(BaseModel):
+    id: str
+    full_name: str
+    email: str
+    phone: str | None = None
+    role: UserRole
+
+
+class AuthResponse(BaseModel):
+    token: str
+    user: User

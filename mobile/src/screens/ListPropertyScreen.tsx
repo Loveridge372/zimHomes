@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 
-import { initiatePayment, submitProperty } from "../api/client";
+import { getCurrentApiBaseUrl, initiatePayment, submitProperty } from "../api/client";
 import { Field } from "../components/Field";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { Screen } from "../components/Screen";
@@ -52,7 +52,11 @@ export function ListPropertyScreen() {
       setBedrooms("");
       setDescription("");
     } catch (error) {
-      Alert.alert("Submission saved locally", "Start the FastAPI backend to submit listings and payments.");
+      const message = error instanceof Error ? error.message : "Unknown error";
+      Alert.alert(
+        "Could not reach backend",
+        `The app tried ${getCurrentApiBaseUrl()}.\n\nRestart backend with --host 0.0.0.0, then restart Expo.\n\n${message}`
+      );
     } finally {
       setSubmitting(false);
     }

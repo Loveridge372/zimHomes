@@ -34,10 +34,17 @@ The `backend` folder contains a FastAPI scaffold for properties, admin approval,
 cd backend
 python -m venv .venv
 .venv\Scripts\pip install -r requirements.txt
-.venv\Scripts\uvicorn main:app --reload
+.venv\Scripts\uvicorn main:app --host 0.0.0.0 --reload
 ```
 
 Then open `http://127.0.0.1:8000/docs` for the API explorer.
+
+The backend creates a local SQLite database at `backend/zimhomes.db` by default. Demo admin login:
+
+```text
+Email: admin@zimhomes.local
+Password: AdminPass123
+```
 
 ## Mobile App
 
@@ -52,7 +59,7 @@ The mobile app currently calls `http://127.0.0.1:8000`. If testing on a physical
 ## Recommended Next Build Steps
 
 1. Install dependencies and run the backend plus mobile app locally.
-2. Add PostgreSQL with SQLAlchemy and Alembic migrations.
+2. Add Alembic migrations and move production storage to PostgreSQL.
 3. Store property images in Cloudinary or S3.
 4. Integrate Paynow first for EcoCash, OneMoney, cards, ZimSwitch, InnBucks, and related local payment options.
 5. Add login, role-based permissions, and verification workflows for landlords and properties before listings go live.

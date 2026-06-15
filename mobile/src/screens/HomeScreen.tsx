@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import { Alert, StyleSheet, Text, View } from "react-native";
 
 import { getProperties, initiatePayment } from "../api/client";
@@ -16,19 +16,18 @@ export function HomeScreen() {
   const [maxPrice, setMaxPrice] = useState("");
   const [properties, setProperties] = useState<Property[]>(demoProperties);
   const [loading, setLoading] = useState(false);
-
-  const locationParts = useMemo(() => location.trim().split(",").map((item) => item.trim()), [location]);
+  const [searched, setSearched] = useState(false);
 
   async function loadProperties() {
     setLoading(true);
     try {
       const results = await getProperties({
-        city: locationParts[0],
-        suburb: locationParts[1],
-        purpose,
+        location: location.trim(),
+        purpose: purpose.trim().toLowerCase(),
         max_price: maxPrice
       });
-      setProperties(results.length ? results : demoProperties);
+      setProperties(results);
+      setSearched(true);
     } catch {
       setProperties(demoProperties);
     } finally {
@@ -64,7 +63,7 @@ export function HomeScreen() {
       </View>
 
       <View style={styles.panel}>
-        <Field label="City or city, suburb" value={location} onChangeText={setLocation} placeholder="Harare, Borrowdale" />
+        <Field label="City, suburb, or title" value={location} onChangeText={setLocation} placeholder="Avondale, Harare, Borrowdale..." />
         <Field label="Purpose" value={purpose} onChangeText={setPurpose} placeholder="rent or buy" autoCapitalize="none" />
         <Field
           label="Max price USD"
@@ -76,9 +75,16 @@ export function HomeScreen() {
         <PrimaryButton label={loading ? "Searching..." : "Search"} onPress={loadProperties} disabled={loading} />
       </View>
 
-      {properties.map((property) => (
-        <PropertyCard key={property.id} property={property} onBookViewing={bookViewing} />
-      ))}
+      {properties.length ? (
+        properties.map((property) => <PropertyCard key={property.id} property={property} onBookViewing={bookViewing} />)
+      ) : (
+        <View style={styles.emptyState}>
+          <Text style={styles.emptyTitle}>No approved properties found</Text>
+          <Text style={styles.emptyCopy}>
+            {searched ? "Try a nearby suburb, clear the purpose filter, or confirm the property was approved in Admin." : "Search to see approved listings."}
+          </Text>
+        </View>
+      )}
     </Screen>
   );
 }
@@ -112,5 +118,22 @@ const styles = StyleSheet.create({
     borderColor: colors.line,
     backgroundColor: colors.surface,
     padding: spacing.md
+  },
+  emptyState: {
+    gap: spacing.xs,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface,
+    padding: spacing.md
+  },
+  emptyTitle: {
+    color: colors.ink,
+    fontSize: 18,
+    fontWeight: "900"
+  },
+  emptyCopy: {
+    color: colors.muted,
+    lineHeight: 21
   }
 });

@@ -39,14 +39,29 @@ http://192.168.1.50:8000
 
 ## Current Backend Storage
 
-The backend currently uses an in-memory store. This is intentional for the first app structure because it lets the mobile app and API run before PostgreSQL credentials are ready.
+The backend now uses SQLAlchemy. By default it creates a local SQLite database at `backend/zimhomes.db`, which is enough for development and phone testing. For production, set `DATABASE_URL` to PostgreSQL.
+
+Run the backend after installing requirements:
+
+```bash
+cd backend
+.venv\Scripts\pip install -r requirements.txt
+.venv\Scripts\uvicorn main:app --host 0.0.0.0 --reload
+```
+
+Seeded demo admin account:
+
+```text
+Email: admin@zimhomes.local
+Password: AdminPass123
+```
 
 Next backend milestone:
 
-1. Add SQLAlchemy models.
-2. Connect `DATABASE_URL` from `.env`.
-3. Create migrations with Alembic.
-4. Replace `InMemoryStore` with database repositories.
+1. Add Alembic migrations.
+2. Move from local SQLite to PostgreSQL.
+3. Add role-based admin permissions to protect approval routes.
+4. Add password reset and phone verification.
 
 ## Payment Integration
 
