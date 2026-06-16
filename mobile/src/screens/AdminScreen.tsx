@@ -114,10 +114,19 @@ export function AdminScreen() {
                 <Text style={styles.cardTitle}>{user.full_name}</Text>
                 <Text style={styles.status}>{user.role}</Text>
               </View>
-              <Text style={styles.copy}>{user.email}</Text>
-              {user.phone ? <Text style={styles.copy}>{user.phone}</Text> : null}
-              <Text style={styles.reference}>User ID: {user.id.slice(0, 8)}</Text>
+            <Text style={styles.copy}>{user.email}</Text>
+            {user.phone ? <Text style={styles.copy}>{user.phone}</Text> : null}
+            <View style={styles.badgeRow}>
+              {user.verification_badges.length ? (
+                user.verification_badges.map((badge) => (
+                  <Text key={badge} style={styles.badge}>{badge}</Text>
+                ))
+              ) : (
+                <Text style={styles.badgeMuted}>Unverified</Text>
+              )}
             </View>
+            <Text style={styles.reference}>User ID: {user.id.slice(0, 8)}</Text>
+          </View>
           ))
         ) : (
           <View style={styles.card}>
@@ -136,10 +145,41 @@ export function AdminScreen() {
               <Text style={styles.status}>{viewing.status}</Text>
             </View>
             <Text style={styles.copy}>{viewing.property_location ?? viewing.property_id}</Text>
+            <View style={styles.applicationBox}>
+              <View style={styles.row}>
+                <Text style={styles.applicationTitle}>{viewing.requester_name ?? "Tenant applicant"}</Text>
+                <Text style={styles.status}>{viewing.requester_role ?? "tenant"}</Text>
+              </View>
+              <View style={styles.badgeRow}>
+                {viewing.requester_badges.length ? (
+                  viewing.requester_badges.map((badge) => (
+                    <Text key={badge} style={styles.badge}>{badge}</Text>
+                  ))
+                ) : (
+                  <Text style={styles.badgeMuted}>Unverified</Text>
+                )}
+              </View>
+              {viewing.preferred_time ? <Text style={styles.copy}>Preferred time: {viewing.preferred_time}</Text> : null}
+              {viewing.household_size ? <Text style={styles.copy}>Household size: {viewing.household_size}</Text> : null}
+              {viewing.budget_usd ? <Text style={styles.copy}>Budget: ${viewing.budget_usd.toLocaleString()}</Text> : null}
+              {viewing.preferred_locations ? <Text style={styles.copy}>Preferred areas: {viewing.preferred_locations}</Text> : null}
+              {viewing.preferred_property_type ? <Text style={styles.copy}>Property type: {viewing.preferred_property_type}</Text> : null}
+              {viewing.contact_unlocked ? (
+                <View style={styles.unlockedBox}>
+                  <Text style={styles.applicationTitle}>Contact unlocked</Text>
+                  {viewing.requester_phone ? <Text style={styles.copy}>Phone: {viewing.requester_phone}</Text> : null}
+                  {viewing.requester_email ? <Text style={styles.copy}>Email: {viewing.requester_email}</Text> : null}
+                  {viewing.salary_range ? <Text style={styles.copy}>Salary range: {viewing.salary_range}</Text> : null}
+                  {viewing.tenant_references ? <Text style={styles.copy}>References: {viewing.tenant_references}</Text> : null}
+                </View>
+              ) : (
+                <Text style={styles.privacyNote}>Sensitive contact, salary, and references unlock after confirming interest.</Text>
+              )}
+            </View>
             {viewing.message ? <Text style={styles.copy}>{viewing.message}</Text> : null}
             <Text style={styles.reference}>Reference: {viewing.id.slice(0, 8)}</Text>
             <View style={styles.actionGrid}>
-              <PrimaryButton label="Confirm" onPress={() => changeViewingStatus(viewing, "confirmed")} variant="secondary" />
+              <PrimaryButton label="Confirm and unlock contact" onPress={() => changeViewingStatus(viewing, "confirmed")} variant="secondary" />
               <PrimaryButton label="Complete" onPress={() => changeViewingStatus(viewing, "completed")} variant="secondary" />
               <PrimaryButton label="Cancel" onPress={() => changeViewingStatus(viewing, "cancelled")} variant="secondary" />
             </View>
@@ -231,6 +271,55 @@ const styles = StyleSheet.create({
     backgroundColor: "#eaf4ed",
     fontSize: 12,
     fontWeight: "900"
+  },
+  badgeRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs
+  },
+  badge: {
+    overflow: "hidden",
+    borderRadius: 8,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    color: colors.green,
+    backgroundColor: "#eaf4ed",
+    fontSize: 12,
+    fontWeight: "900"
+  },
+  badgeMuted: {
+    overflow: "hidden",
+    borderRadius: 8,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    color: colors.muted,
+    backgroundColor: colors.soft,
+    fontSize: 12,
+    fontWeight: "900"
+  },
+  applicationBox: {
+    gap: spacing.xs,
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.soft,
+    padding: spacing.sm
+  },
+  applicationTitle: {
+    color: colors.ink,
+    fontWeight: "900"
+  },
+  privacyNote: {
+    color: colors.muted,
+    fontSize: 12,
+    fontWeight: "800",
+    lineHeight: 18
+  },
+  unlockedBox: {
+    gap: spacing.xs,
+    borderRadius: 8,
+    backgroundColor: colors.surface,
+    padding: spacing.sm
   },
   reference: {
     color: colors.muted,

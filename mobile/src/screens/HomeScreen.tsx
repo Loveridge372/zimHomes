@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, Text, View } from "react-native";
+import { Alert, Pressable, StyleSheet, Text, View } from "react-native";
 
 import { createViewingRequest, getCurrentApiBaseUrl, getProperties, initiatePayment } from "../api/client";
 import { Field } from "../components/Field";
@@ -7,6 +7,7 @@ import { PrimaryButton } from "../components/PrimaryButton";
 import { PropertyCard } from "../components/PropertyCard";
 import { PropertyDetails } from "../components/PropertyDetails";
 import { Screen } from "../components/Screen";
+import { amenities as amenityOptions } from "../data/amenities";
 import { demoProperties } from "../data/demoProperties";
 import { useFavorites } from "../state/FavoritesContext";
 import { colors, spacing } from "../theme";
@@ -16,6 +17,7 @@ export function HomeScreen() {
   const [location, setLocation] = useState("");
   const [purpose, setPurpose] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [properties, setProperties] = useState<Property[]>(demoProperties);
   const [selectedProperty, setSelectedProperty] = useState<Property | null>(null);
   const [bookingProperty, setBookingProperty] = useState<Property | null>(null);
@@ -34,15 +36,37 @@ export function HomeScreen() {
       const results = await getProperties({
         location: location.trim(),
         purpose: purpose.trim().toLowerCase(),
-        max_price: maxPrice
+        max_price: maxPrice,
+        amenities: selectedAmenities.join(",")
       });
       setProperties(results);
       setSearched(true);
     } catch {
-      setProperties(demoProperties);
+      setProperties(filterDemoProperties());
     } finally {
       setLoading(false);
     }
+  }
+
+  function filterDemoProperties() {
+    const locationQuery = location.trim().toLowerCase();
+    const purposeQuery = purpose.trim().toLowerCase();
+    const max = Number(maxPrice);
+    const requiredAmenities = selectedAmenities.map((amenity) => amenity.toLowerCase());
+
+    return demoProperties.filter((property) => {
+      const matchesLocation =
+        !locationQuery ||
+        property.city.toLowerCase().includes(locationQuery) ||
+        property.suburb.toLowerCase().includes(locationQuery) ||
+        property.title.toLowerCase().includes(locationQuery);
+      const matchesPurpose = !purposeQuery || property.purpose === purposeQuery;
+      const matchesPrice = !max || property.price_usd <= max;
+      const propertyAmenities = property.amenities.map((amenity) => amenity.toLowerCase());
+      const matchesAmenities = requiredAmenities.every((amenity) => propertyAmenities.includes(amenity));
+
+      return matchesLocation && matchesPurpose && matchesPrice && matchesAmenities;
+    });
   }
 
   function openBookingForm(property: Property) {
@@ -72,7 +96,7 @@ export function HomeScreen() {
       const viewing = await createViewingRequest({
         property_id: bookingProperty.id,
         preferred_time: `${viewingDate.trim()} at ${viewingTime.trim()}`,
-        message: `Phone: ${viewerPhone.trim()}\n${viewingMessage.trim() || `Viewing requested for ${bookingProperty.title}`}`
+        message: viewingMessage.trim() || `Viewing requested for ${bookingProperty.title}`
       });
       const payment = await initiatePayment({
         payment_type: "viewing_fee",
@@ -143,6 +167,28 @@ export function HomeScreen() {
           placeholder="800"
           keyboardType="number-pad"
         />
+        <View style={styles.filterSection}>
+          <Text style={styles.filterTitle}>Amenities needed</Text>
+          <View style={styles.amenityGrid}>
+            {amenityOptions.map((amenity) => {
+              const selected = selectedAmenities.includes(amenity);
+              return (
+                <Pressable
+                  key={amenity}
+                  accessibilityRole="button"
+                  onPress={() =>
+                    setSelectedAmenities((current) =>
+                      selected ? current.filter((item) => item !== amenity) : [...current, amenity]
+                    )
+                  }
+                  style={({ pressed }) => [styles.amenityChip, selected ? styles.amenityChipSelected : null, pressed ? styles.pressed : null]}
+                >
+                  <Text style={[styles.amenityText, selected ? styles.amenityTextSelected : null]}>{amenity}</Text>
+                </Pressable>
+              );
+            })}
+          </View>
+        </View>
         <PrimaryButton label={loading ? "Searching..." : "Search"} onPress={loadProperties} disabled={loading} />
       </View>
 
@@ -223,6 +269,7 @@ function ViewingForm({
       <Field label="Preferred time" value={viewingTime} onChangeText={setViewingTime} placeholder="14:30" />
       <Field label="Phone number" value={viewerPhone} onChangeText={setViewerPhone} placeholder="+263..." keyboardType="phone-pad" />
       <Field label="Message" value={viewingMessage} onChangeText={setViewingMessage} placeholder="Any notes for the owner..." multiline />
+      <Text style={styles.privacyNote}>Your phone, salary range, and references stay hidden until the landlord confirms interest.</Text>
       <View style={styles.bookingActions}>
         <PrimaryButton label={bookingLoading ? "Submitting..." : "Submit viewing request"} onPress={onSubmit} disabled={bookingLoading} />
         <PrimaryButton label="Cancel" onPress={onCancel} variant="secondary" />
@@ -261,6 +308,42 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     padding: spacing.md
   },
+  filterSection: {
+    gap: spacing.sm
+  },
+  filterTitle: {
+    color: colors.muted,
+    fontSize: 12,
+    fontWeight: "800"
+  },
+  amenityGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs
+  },
+  amenityChip: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface,
+    paddingHorizontal: 10,
+    paddingVertical: 8
+  },
+  amenityChipSelected: {
+    borderColor: colors.green,
+    backgroundColor: colors.green
+  },
+  amenityText: {
+    color: colors.ink,
+    fontSize: 12,
+    fontWeight: "800"
+  },
+  amenityTextSelected: {
+    color: colors.surface
+  },
+  pressed: {
+    opacity: 0.8
+  },
   bookingPanel: {
     gap: spacing.sm,
     borderRadius: 8,
@@ -280,6 +363,12 @@ const styles = StyleSheet.create({
   },
   bookingActions: {
     gap: spacing.sm
+  },
+  privacyNote: {
+    color: colors.muted,
+    fontSize: 12,
+    fontWeight: "800",
+    lineHeight: 18
   },
   emptyState: {
     gap: spacing.xs,

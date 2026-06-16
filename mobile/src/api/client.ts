@@ -1,7 +1,7 @@
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 
-import { AuthResponse, Payment, Property, PropertyInput, User, ViewingRequest } from "../types";
+import { AuthResponse, OwnerProperty, Payment, Property, PropertyInput, PropertyMatch, User, UserProfileUpdate, ViewingRequest } from "../types";
 
 function getApiBaseUrl() {
   const configuredUrl = Constants.expoConfig?.extra?.apiBaseUrl;
@@ -113,7 +113,14 @@ export function getMe() {
   return request<User>("/auth/me");
 }
 
-export function getProperties(filters: { city?: string; suburb?: string; location?: string; purpose?: string; max_price?: string }) {
+export function updateMe(payload: UserProfileUpdate) {
+  return request<User>("/auth/me", {
+    method: "PUT",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function getProperties(filters: { city?: string; suburb?: string; location?: string; purpose?: string; max_price?: string; amenities?: string }) {
   const params = new URLSearchParams();
   Object.entries(filters).forEach(([key, value]) => {
     if (value) params.set(key, value);
@@ -122,9 +129,31 @@ export function getProperties(filters: { city?: string; suburb?: string; locatio
   return request<Property[]>(`/properties${query ? `?${query}` : ""}`);
 }
 
+export function getMyMatches() {
+  return request<PropertyMatch[]>("/matches/me");
+}
+
 export function submitProperty(payload: PropertyInput) {
   return request<Property>("/properties", {
     method: "POST",
+    body: JSON.stringify(payload)
+  });
+}
+
+export function getMyProperties() {
+  return request<OwnerProperty[]>("/properties/mine");
+}
+
+export function updateMyPropertyStatus(propertyId: string, status: "approved" | "unavailable") {
+  return request<OwnerProperty>(`/properties/${propertyId}/status`, {
+    method: "PATCH",
+    body: JSON.stringify({ status })
+  });
+}
+
+export function updateMyProperty(propertyId: string, payload: PropertyInput) {
+  return request<OwnerProperty>(`/properties/${propertyId}`, {
+    method: "PUT",
     body: JSON.stringify(payload)
   });
 }
@@ -196,6 +225,10 @@ export function getMyViewingRequests() {
 
 export function getViewingRequests() {
   return request<ViewingRequest[]>("/viewings");
+}
+
+export function getOwnedViewingRequests() {
+  return request<ViewingRequest[]>("/viewings/owned");
 }
 
 export function updateViewingStatus(viewingId: string, status: "pending" | "confirmed" | "completed" | "cancelled") {

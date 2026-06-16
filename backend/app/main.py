@@ -6,7 +6,7 @@ from sqlalchemy import select
 from app.config import UPLOADS_DIR
 from app.database import SessionLocal, create_db_and_tables
 from app.models import PropertyModel, UserModel
-from app.routers import admin, assistant, auth, payments, properties, viewings
+from app.routers import admin, assistant, auth, matches, payments, properties, viewings
 from app.security import hash_password
 
 
@@ -32,6 +32,7 @@ app.include_router(auth.router)
 app.include_router(assistant.router)
 app.include_router(properties.router)
 app.include_router(admin.router)
+app.include_router(matches.router)
 app.include_router(payments.router)
 app.include_router(viewings.router)
 UPLOADS_DIR.mkdir(parents=True, exist_ok=True)
@@ -60,6 +61,8 @@ def seed_demo_data() -> None:
                 phone="+263770000000",
                 password_hash=hash_password("AdminPass123"),
                 role="admin",
+                phone_verified=True,
+                id_submitted=True,
             )
             db.add(admin)
             db.flush()
@@ -79,6 +82,7 @@ def seed_demo_data() -> None:
                         bedrooms=4,
                         bathrooms=3,
                         description="Secure family home with borehole, garden, and double garage.",
+                        amenities='["Borehole", "Garden", "Garage", "Walled and gated", "Parking"]',
                         management_option="zimhomes_managed",
                         status="approved",
                         is_verified=True,
@@ -94,6 +98,7 @@ def seed_demo_data() -> None:
                         bedrooms=3,
                         bathrooms=2,
                         description="Move-in ready townhouse with title deeds available for buyer due diligence.",
+                        amenities='["Parking", "Garden", "Walled and gated"]',
                         management_option="self_managed",
                         status="approved",
                         is_verified=True,

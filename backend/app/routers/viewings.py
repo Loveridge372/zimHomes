@@ -34,6 +34,14 @@ def my_viewing_requests(
     return store.list_viewing_requests(db, requester=current_user)
 
 
+@router.get("/owned", response_model=list[ViewingRequest])
+def owned_property_viewing_requests(
+    current_user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> list[ViewingRequest]:
+    return store.list_owner_viewing_requests(db, current_user)
+
+
 @router.get("", response_model=list[ViewingRequest])
 def all_viewing_requests(db: Session = Depends(get_db)) -> list[ViewingRequest]:
     return store.list_viewing_requests(db)

@@ -64,6 +64,14 @@ export function PropertyCard({ property, isFavorite, onBookViewing, onToggleFavo
           {property.suburb}, {property.city} - {property.bedrooms} bed - {property.bathrooms} bath
         </Text>
         <Text style={styles.price}>{money(property.price_usd, property.purpose)}</Text>
+        {property.amenities?.length ? (
+          <View style={styles.amenityRow}>
+            {property.amenities.slice(0, 5).map((amenity) => (
+              <Text key={amenity} style={styles.amenityChip}>{amenity}</Text>
+            ))}
+            {property.amenities.length > 5 ? <Text style={styles.amenityChip}>+{property.amenities.length - 5}</Text> : null}
+          </View>
+        ) : null}
         <Text style={styles.description}>{property.description}</Text>
         <View style={styles.actions}>
           <PrimaryButton label="View details" onPress={() => onViewDetails?.(property)} />
@@ -173,6 +181,21 @@ const styles = StyleSheet.create({
   description: {
     color: colors.muted,
     lineHeight: 21
+  },
+  amenityRow: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs
+  },
+  amenityChip: {
+    overflow: "hidden",
+    borderRadius: 8,
+    backgroundColor: colors.soft,
+    color: colors.ink,
+    paddingHorizontal: 9,
+    paddingVertical: 5,
+    fontSize: 12,
+    fontWeight: "800"
   },
   actions: {
     gap: spacing.sm

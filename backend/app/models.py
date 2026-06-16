@@ -24,6 +24,17 @@ class UserModel(Base):
     phone: Mapped[str | None] = mapped_column(String(40), unique=True, nullable=True)
     password_hash: Mapped[str] = mapped_column(String(255))
     role: Mapped[str] = mapped_column(String(40), default="seeker")
+    phone_verified: Mapped[bool] = mapped_column(Boolean, default=False)
+    id_submitted: Mapped[bool] = mapped_column(Boolean, default=False)
+    ownership_proof_submitted: Mapped[bool] = mapped_column(Boolean, default=False)
+    employment_status: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    salary_range: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    tenant_references: Mapped[str | None] = mapped_column(Text, nullable=True)
+    household_size: Mapped[int | None] = mapped_column(Integer, nullable=True)
+    preferred_locations: Mapped[str | None] = mapped_column(String(255), nullable=True)
+    preferred_property_type: Mapped[str | None] = mapped_column(String(80), nullable=True)
+    preferred_amenities: Mapped[str] = mapped_column(Text, default="[]")
+    budget_usd: Mapped[float | None] = mapped_column(Float, nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
     properties: Mapped[list["PropertyModel"]] = relationship(back_populates="owner")
@@ -43,6 +54,7 @@ class PropertyModel(Base):
     bedrooms: Mapped[int] = mapped_column(Integer, default=0)
     bathrooms: Mapped[int] = mapped_column(Integer, default=1)
     description: Mapped[str] = mapped_column(Text)
+    amenities: Mapped[str] = mapped_column(Text, default="[]")
     management_option: Mapped[str] = mapped_column(String(40), default="self_managed")
     status: Mapped[str] = mapped_column(String(40), default="pending_review", index=True)
     is_verified: Mapped[bool] = mapped_column(Boolean, default=False)
@@ -54,6 +66,7 @@ class PropertyModel(Base):
         cascade="all, delete-orphan",
         order_by="PropertyImageModel.sort_order",
     )
+    viewing_requests: Mapped[list["ViewingRequestModel"]] = relationship(back_populates="property")
 
 
 class PropertyImageModel(Base):
@@ -99,7 +112,8 @@ class ViewingRequestModel(Base):
     status: Mapped[str] = mapped_column(String(40), default="pending", index=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=now_utc)
 
-    property: Mapped[PropertyModel] = relationship()
+    property: Mapped[PropertyModel] = relationship(back_populates="viewing_requests")
+    requester: Mapped[UserModel | None] = relationship()
 
 
 class AuthTokenModel(Base):

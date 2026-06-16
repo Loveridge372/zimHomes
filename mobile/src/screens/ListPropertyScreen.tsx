@@ -1,11 +1,12 @@
 import { useState } from "react";
-import { Alert, Image, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, Image, Pressable, ScrollView, StyleSheet, Text, View } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 
 import { getCurrentApiBaseUrl, initiatePayment, submitProperty, uploadPropertyImages } from "../api/client";
 import { Field } from "../components/Field";
 import { PrimaryButton } from "../components/PrimaryButton";
 import { Screen } from "../components/Screen";
+import { amenities as amenityOptions } from "../data/amenities";
 import { colors, spacing } from "../theme";
 import { PropertyInput } from "../types";
 
@@ -18,6 +19,7 @@ export function ListPropertyScreen() {
   const [price, setPrice] = useState("");
   const [bedrooms, setBedrooms] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedAmenities, setSelectedAmenities] = useState<string[]>([]);
   const [management, setManagement] = useState<"self_managed" | "zimhomes_managed">("self_managed");
   const [images, setImages] = useState<ImagePicker.ImagePickerAsset[]>([]);
   const [submitting, setSubmitting] = useState(false);
@@ -52,6 +54,7 @@ export function ListPropertyScreen() {
       bedrooms: Number(bedrooms),
       bathrooms: 1,
       description,
+      amenities: selectedAmenities,
       management_option: management
     };
 
@@ -75,6 +78,7 @@ export function ListPropertyScreen() {
       setPrice("");
       setBedrooms("");
       setDescription("");
+      setSelectedAmenities([]);
       setImages([]);
     } catch (error) {
       const message = error instanceof Error ? error.message : "Unknown error";
@@ -130,6 +134,29 @@ export function ListPropertyScreen() {
         placeholder="Security, water, parking, lease terms..."
         multiline
       />
+      <View style={styles.amenitiesPanel}>
+        <Text style={styles.photoTitle}>Amenities</Text>
+        <Text style={styles.photoCopy}>Select everything available at the property.</Text>
+        <View style={styles.amenityGrid}>
+          {amenityOptions.map((amenity) => {
+            const selected = selectedAmenities.includes(amenity);
+            return (
+              <Pressable
+                key={amenity}
+                accessibilityRole="button"
+                onPress={() =>
+                  setSelectedAmenities((current) =>
+                    selected ? current.filter((item) => item !== amenity) : [...current, amenity]
+                  )
+                }
+                style={({ pressed }) => [styles.amenityChip, selected ? styles.amenityChipSelected : null, pressed ? styles.pressed : null]}
+              >
+                <Text style={[styles.amenityText, selected ? styles.amenityTextSelected : null]}>{amenity}</Text>
+              </Pressable>
+            );
+          })}
+        </View>
+      </View>
       <PrimaryButton label={submitting ? "Submitting..." : "Submit for approval"} onPress={submit} disabled={submitting} />
     </Screen>
   );
@@ -185,5 +212,41 @@ const styles = StyleSheet.create({
     height: 92,
     borderRadius: 8,
     backgroundColor: colors.line
+  },
+  amenitiesPanel: {
+    gap: spacing.sm,
+    borderRadius: 8,
+    padding: spacing.md,
+    backgroundColor: colors.surface,
+    borderColor: colors.line,
+    borderWidth: 1
+  },
+  amenityGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs
+  },
+  amenityChip: {
+    borderRadius: 8,
+    borderWidth: 1,
+    borderColor: colors.line,
+    backgroundColor: colors.surface,
+    paddingHorizontal: 10,
+    paddingVertical: 8
+  },
+  amenityChipSelected: {
+    borderColor: colors.green,
+    backgroundColor: colors.green
+  },
+  amenityText: {
+    color: colors.ink,
+    fontSize: 12,
+    fontWeight: "800"
+  },
+  amenityTextSelected: {
+    color: colors.surface
+  },
+  pressed: {
+    opacity: 0.8
   }
 });

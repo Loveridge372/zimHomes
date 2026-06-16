@@ -10,7 +10,7 @@ from app.database import get_db
 from app.dependencies import get_current_user
 from app.models import UserModel
 from app.repository import store
-from app.schemas import Property, PropertyImage, PropertyIn, Purpose
+from app.schemas import OwnerProperty, Property, PropertyImage, PropertyIn, PropertyStatusUpdate, PropertyUpdate, Purpose
 
 router = APIRouter(prefix="/properties", tags=["properties"])
 
@@ -22,9 +22,19 @@ def search_properties(
     location: str | None = None,
     purpose: Purpose | None = None,
     max_price: float | None = None,
+    amenities: str | None = None,
     db: Session = Depends(get_db),
 ) -> list[Property]:
-    return store.search_properties(db, city=city, suburb=suburb, location=location, purpose=purpose, max_price=max_price)
+    amenity_filters = [item.strip() for item in amenities.split(",")] if amenities else None
+    return store.search_properties(
+        db,
+        city=city,
+        suburb=suburb,
+        location=location,
+        purpose=purpose,
+        max_price=max_price,
+        amenities=amenity_filters,
+    )
 
 
 @router.post("", response_model=Property, status_code=201)
@@ -37,6 +47,40 @@ def submit_property(
     if authorization:
         owner = get_current_user(authorization=authorization, db=db)
     return store.create_property(db, payload, owner=owner)
+
+
+@router.get("/mine", response_model=list[OwnerProperty])
+def my_properties(
+    current_user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> list[OwnerProperty]:
+    return store.list_owner_properties(db, current_user)
+
+
+@router.patch("/{property_id}/status", response_model=OwnerProperty)
+def update_my_property_status(
+    property_id: str,
+    payload: PropertyStatusUpdate,
+    current_user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> OwnerProperty:
+    item = store.update_owner_property_status(db, current_user, property_id, payload.status)
+    if not item:
+        raise HTTPException(status_code=404, detail="Property not found")
+    return item
+
+
+@router.put("/{property_id}", response_model=OwnerProperty)
+def update_my_property(
+    property_id: str,
+    payload: PropertyUpdate,
+    current_user: UserModel = Depends(get_current_user),
+    db: Session = Depends(get_db),
+) -> OwnerProperty:
+    item = store.update_owner_property(db, current_user, property_id, payload)
+    if not item:
+        raise HTTPException(status_code=404, detail="Property not found")
+    return item
 
 
 @router.post("/{property_id}/images", response_model=list[PropertyImage], status_code=201)

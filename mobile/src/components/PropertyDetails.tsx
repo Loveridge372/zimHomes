@@ -95,6 +95,17 @@ export function PropertyDetails({ property, isFavorite, onBack, onBookViewing, o
             <Text style={styles.description}>{property.description}</Text>
           </View>
 
+          {property.amenities?.length ? (
+            <View style={styles.section}>
+              <Text style={styles.sectionTitle}>Amenities</Text>
+              <View style={styles.amenityGrid}>
+                {property.amenities.map((amenity) => (
+                  <Text key={amenity} style={styles.amenityChip}>{amenity}</Text>
+                ))}
+              </View>
+            </View>
+          ) : null}
+
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>Documents</Text>
             <Text style={styles.description}>
@@ -249,5 +260,20 @@ const styles = StyleSheet.create({
   description: {
     color: colors.muted,
     lineHeight: 22
+  },
+  amenityGrid: {
+    flexDirection: "row",
+    flexWrap: "wrap",
+    gap: spacing.xs
+  },
+  amenityChip: {
+    overflow: "hidden",
+    borderRadius: 8,
+    backgroundColor: colors.soft,
+    color: colors.ink,
+    paddingHorizontal: 10,
+    paddingVertical: 7,
+    fontSize: 12,
+    fontWeight: "800"
   }
 });

@@ -13,6 +13,7 @@ export type Property = {
   bedrooms: number;
   bathrooms: number;
   description: string;
+  amenities: string[];
   management_option: "self_managed" | "zimhomes_managed";
   status: PropertyStatus;
   is_verified: boolean;
@@ -20,6 +21,11 @@ export type Property = {
 };
 
 export type PropertyInput = Omit<Property, "id" | "status" | "is_verified" | "image_urls">;
+
+export type OwnerProperty = Property & {
+  application_count: number;
+  pending_application_count: number;
+};
 
 export type Payment = {
   id: string;
@@ -40,10 +46,22 @@ export type ViewingRequest = {
   id: string;
   property_id: string;
   requester_id?: string | null;
+  requester_name?: string | null;
+  requester_role?: string | null;
+  requester_badges: string[];
   property_title?: string | null;
   property_location?: string | null;
   preferred_time?: string | null;
   message?: string | null;
+  household_size?: number | null;
+  preferred_locations?: string | null;
+  preferred_property_type?: string | null;
+  budget_usd?: number | null;
+  contact_unlocked: boolean;
+  requester_phone?: string | null;
+  requester_email?: string | null;
+  salary_range?: string | null;
+  tenant_references?: string | null;
   status: string;
 };
 
@@ -55,6 +73,39 @@ export type User = {
   email: string;
   phone?: string | null;
   role: UserRole;
+  phone_verified: boolean;
+  id_submitted: boolean;
+  ownership_proof_submitted: boolean;
+  employment_status?: string | null;
+  salary_range?: string | null;
+  tenant_references?: string | null;
+  household_size?: number | null;
+  preferred_locations?: string | null;
+  preferred_property_type?: string | null;
+  preferred_amenities: string[];
+  budget_usd?: number | null;
+  verification_badges: string[];
+};
+
+export type UserProfileUpdate = {
+  phone?: string | null;
+  phone_verified: boolean;
+  id_submitted: boolean;
+  ownership_proof_submitted: boolean;
+  employment_status?: string | null;
+  salary_range?: string | null;
+  tenant_references?: string | null;
+  household_size?: number | null;
+  preferred_locations?: string | null;
+  preferred_property_type?: string | null;
+  preferred_amenities: string[];
+  budget_usd?: number | null;
+};
+
+export type PropertyMatch = {
+  property: Property;
+  score: number;
+  reasons: string[];
 };
 
 export type AuthResponse = {

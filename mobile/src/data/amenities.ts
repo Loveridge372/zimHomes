@@ -1,0 +1,20 @@
+export const amenities = [
+  "Borehole",
+  "Solar backup",
+  "WiFi",
+  "Water tank",
+  "Generator",
+  "Swimming pool",
+  "Electric fence",
+  "Walled and gated",
+  "Security guard",
+  "CCTV",
+  "Furnished",
+  "Parking",
+  "Garage",
+  "Maid's quarters",
+  "Garden",
+  "Air conditioning",
+  "Backup water supply",
+  "Pet friendly"
+] as const;

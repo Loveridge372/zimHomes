@@ -72,6 +72,10 @@ export function ActivityScreen() {
               <Text style={[styles.status, styles[`status_${viewing.status}` as keyof typeof styles]]}>{viewing.status}</Text>
             </View>
             <Text style={styles.copy}>{viewing.property_location ?? viewing.property_id}</Text>
+            {viewing.preferred_time ? <Text style={styles.copy}>Preferred time: {viewing.preferred_time}</Text> : null}
+            <Text style={viewing.contact_unlocked ? styles.unlockedNote : styles.lockedNote}>
+              {viewing.contact_unlocked ? "Landlord confirmed interest. Contact details are unlocked." : "Sensitive profile details remain private until confirmed."}
+            </Text>
             {viewing.message ? <Text style={styles.message}>{viewing.message}</Text> : null}
             <Text style={styles.reference}>Reference: {viewing.id.slice(0, 8)}</Text>
           </View>
@@ -169,5 +173,17 @@ const styles = StyleSheet.create({
   status_completed: {
     color: colors.ink,
     backgroundColor: colors.soft
+  },
+  lockedNote: {
+    color: colors.muted,
+    fontSize: 12,
+    fontWeight: "800",
+    lineHeight: 18
+  },
+  unlockedNote: {
+    color: colors.green,
+    fontSize: 12,
+    fontWeight: "900",
+    lineHeight: 18
   }
 });
